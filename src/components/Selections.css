@@ -1,0 +1,14 @@
+#selectionsMenu{
+    margin:0;
+    border:1px solid blue;
+    position:relative;
+    z-index:1;
+}
+
+#menuToggle{
+    position:absolute;
+    right:0px;
+    top:0px;
+    z-index:2;
+    color:#0e7746
+}
