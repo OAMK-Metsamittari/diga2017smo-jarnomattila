@@ -27,7 +27,7 @@ class App extends Component {
       regionLevels : [],
       regionLevel : {},
       regions :  [],
-      region: null
+      region: {}
     }
 
     this.getRegions = this.getRegions.bind(this);
@@ -80,17 +80,13 @@ class App extends Component {
    */
   setRegion(regionId)
   {
-    console.log("regionHit:" + this.state.regions);
    let myRegion;
    for(let i in this.state.regions){
-      console.log("getSceCollections:"+this.state.regions[i].id);
       if(this.state.regions[i].id === regionId ){
-        console.log("kuuluu:"+ regionId);
         myRegion =  this.state.regions[i];
         break;
       }
     }
-    
     this.setState({region : myRegion});
     this.forceUpdate();
   }
@@ -102,8 +98,8 @@ class App extends Component {
   getSceCollections()
   {
     for(let i in this.state.region){
+      console.log("i:"+i);
       if(i === "scenarioCollections")return this.state.region[i];
-      console.log("kuuluu:"+ i);
     }
     
     //return this.state.region.scenarioCollections;

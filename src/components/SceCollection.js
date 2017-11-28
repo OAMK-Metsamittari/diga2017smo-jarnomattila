@@ -34,7 +34,6 @@ class SceCollection extends Component {
 
         for(let i in sceCollections){
             opt.push({value: sceCollections[i].id, label:sceCollections[i].description} );
-            console.log("sceCollections2:"+ sceCollections[i]);
         }
 
         return opt;

@@ -47,8 +47,7 @@ class ListRegion extends Component {
      */
     setRegion = (selectedRegion) => {
         
-        console.log("getSceCollections:"+selectedRegion.value );
-        // calling setRegion with retion id
+        // calling setRegion with region id
         this.props.setRegion(selectedRegion.value);
         
     }

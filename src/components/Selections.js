@@ -25,9 +25,7 @@ class Selections extends Component {
     
     toggleMenuVisibility(status)
     {
-        console.log("state:" + this.state.toggle);
         let target = this.state.toggle === 'up' ? this.menuContainer : this.selectionContainer;
-        console.log("toggleMenuVisibility target: " + status);
         scrollToComponent(target, {
             offset:0,
             align: 'top',
