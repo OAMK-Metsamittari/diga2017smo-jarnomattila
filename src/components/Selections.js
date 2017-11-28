@@ -71,6 +71,7 @@ class Selections extends Component {
                     <SelectedItems 
                         regionLevel = {this.props.regionLevel}
                         region = {this.props.region}
+                        scenarioCollection = {this.props.scenarioCollection}
                     />
                 </div>
 

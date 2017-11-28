@@ -27,12 +27,14 @@ class App extends Component {
       regionLevels : [],
       regionLevel : {},
       regions :  [],
-      region: {}
+      region: {},
+      scenarioCollection: {}
     }
 
     this.getRegions = this.getRegions.bind(this);
     this.getSceCollections = this.getSceCollections.bind(this);
     this.setRegion = this.setRegion.bind(this);
+    this.setSceCollection = this.setSceCollection.bind(this);
   }
 
   /**
@@ -80,36 +82,51 @@ class App extends Component {
    */
   setRegion(regionId)
   {
-   let myRegion;
-   for(let i in this.state.regions){
+
+    
+    let myRegion;
+    for(let i in this.state.regions){
       if(this.state.regions[i].id === regionId ){
         myRegion =  this.state.regions[i];
         break;
       }
     }
+    console.log("App.setRegion.regionId:"+myRegion.name);
     this.setState({region : myRegion});
     this.forceUpdate();
   }
 
   /**
    * getSceCollections
-   * 
+   * Returns scenario collections under selected region
    */
   getSceCollections()
   {
-    for(let i in this.state.region){
-      console.log("i:"+i);
-      if(i === "scenarioCollections")return this.state.region[i];
+     return this.state.region.scenarioCollections;
+  }
+
+  /**
+   * setSceCollection
+   * @param {*} collectionId 
+   */
+  setSceCollection(collectionId)
+  {
+   let myCollection;
+   for(let i in this.state.region.scenarioCollections){
+      if(this.state.region.scenarioCollections[i].id === collectionId ){
+        myCollection =  this.state.region.scenarioCollections[i];
+        break;
+      }
     }
-    
-    //return this.state.region.scenarioCollections;
+    this.setState({scenarioCollection : myCollection});
+    this.forceUpdate();
   }
 
   /**
    * render()
    */
   render(){    
-   
+   console.log("App.scenarionCollection:"+this.state.scenarioCollection.id);
     return (
       <div className="App">
         <Header />
@@ -121,6 +138,8 @@ class App extends Component {
           getRegions = {this.getRegions}
           setRegion = {this.setRegion}
           getSceCollections = {this.getSceCollections}
+          setSceCollection = {this.setSceCollection}
+          scenarioCollection = {this.state.scenarioCollection}
         />
 
       <div>Test lines for testing scroll event</div>

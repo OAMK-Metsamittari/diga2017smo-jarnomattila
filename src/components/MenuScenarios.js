@@ -27,10 +27,13 @@ class MenuScenarios extends Component {
                          />
                         <ListRegion 
                             regions = {this.props.regions}
+                            region = {this.props.region}
                             setRegion = {this.props.setRegion}
                          />
                         <SceCollection 
                             getSceCollections = {this.props.getSceCollections}
+                            setSceCollection = {this.props.setSceCollection}
+                            scenarioCollection = {this.props.scenarioCollection}
                         />
                     </div>
                     <div className="col-sm-6" id="divSceRight">

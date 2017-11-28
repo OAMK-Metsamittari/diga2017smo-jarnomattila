@@ -16,7 +16,7 @@ class SceCollection extends Component {
     {
         super(props);
         this.setCollectionOptions = this.setCollectionOptions.bind(this);
-        
+        this.setCollection = this.setCollection.bind(this);
     }
 
     /**
@@ -39,16 +39,30 @@ class SceCollection extends Component {
         return opt;
     }
 
+    /**
+     * setCollection
+     * sets scenarion collections from selected region
+     */
+    setCollection = (selectedCollection) => {
+        
+        // calling setRegion with region id
+        this.props.setSceCollection(selectedCollection.value);
+        
+        
+    }
+
     render () {
         return (
             <div>
                 <label htmlFor="sceCollection">Skenaariokokoelma</label>
                 <Select 
+                     value = {this.props.scenarioCollection.id ? this.props.scenarioCollection.id : "Any"}  
                     onChange = {this.setCollection}
                     placeholder="Valitse"
                     id="sceColSelect"
                     name="collections"
                     options = {this.setCollectionOptions() }
+                    selectedValue = {this.props.scenarioCollection.id}
                  />
             </div>
         )

@@ -26,10 +26,16 @@ class SelectedItems extends Component {
                     <div className="panel-heading">
                         Alue
                     </div>
+                    <div className="panel-body">
+                        {this.props.region.name}
+                    </div>
                 </div>
                 <div className="col-sm-2 panel panel-default">
                     <div className="panel-heading">
                         Skenaariokokoelma
+                    </div>
+                    <div className="panel-body">
+                        {this.props.scenarioCollection.description}
                     </div>
                 </div>
                 <div className="col-sm-2 panel panel-default">
