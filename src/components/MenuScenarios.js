@@ -4,12 +4,12 @@ import ListRegion from './ListRegion';
 import SceCollection from './SceCollection';
 import Scenarios from './Scenarios';
 import Period from './Period';
-import './MenuScenarios.css';
+
 
 /**
  * MenuScenarios
  * Created:     2017-11-25 (Jarno Mattila)
- * Modified:    2017-11-27 (Jarno Mattila)
+ * Modified:    2017-12-03 (Jarno Mattila)
  * Description: 
  */
 
@@ -37,12 +37,19 @@ class MenuScenarios extends Component {
                         />
                     </div>
                     <div className="col-sm-6" id="divSceRight">
-                        <Scenarios />
+                        <Scenarios 
+                            scenarios = {this.props.scenarios}
+                            setScenario = {this.props.setScenario }   
+                            myScenarios = {this.props.myScenarios}                  
+                        />
+                        <Period 
+                            timePeriods = {this.props.timePeriods}
+                            setPeriod = {this.props.setPeriod}
+                            period = {this.props.period}
+                        />
                     </div>
                 </div>
-                <div className="row">
-                    <div><Period /></div>
-                </div>
+                
             </div>
         )
     }

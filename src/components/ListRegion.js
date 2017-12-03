@@ -54,7 +54,6 @@ class ListRegion extends Component {
 
 
     render () {
-        console.log("this.props.region:"+this.props.region.id);
         return (
             <div>
                 <label htmlFor="regLevel">Alue</label>

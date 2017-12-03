@@ -28,13 +28,24 @@ class App extends Component {
       regionLevel : {},
       regions :  [],
       region: {},
-      scenarioCollection: {}
+      scenarioCollection: {},
+      scenarios: [],
+      myScenarios: [],
+      timePeriods: [],
+      period: {},
+      indicatorCategories: [],
+      myIndicators: [],
+      values: []
     }
 
     this.getRegions = this.getRegions.bind(this);
     this.getSceCollections = this.getSceCollections.bind(this);
     this.setRegion = this.setRegion.bind(this);
     this.setSceCollection = this.setSceCollection.bind(this);
+    this.getScenarios = this.getScenarios.bind(this);
+    this.setScenario = this.setScenario.bind(this);
+    this.setPeriod = this.setPeriod.bind(this);
+    this.setIndicator = this.setIndicator.bind(this);
   }
 
   /**
@@ -71,7 +82,7 @@ class App extends Component {
       this.forceUpdate();
     })
     .catch(error => {
-      
+      console.log("getRegions error: " + error);
     });
     
   }
@@ -91,7 +102,6 @@ class App extends Component {
         break;
       }
     }
-    console.log("App.setRegion.regionId:"+myRegion.name);
     this.setState({region : myRegion});
     this.forceUpdate();
   }
@@ -119,6 +129,76 @@ class App extends Component {
       }
     }
     this.setState({scenarioCollection : myCollection});
+    this.getScenarios(myCollection);
+    this.forceUpdate();
+  }
+
+  /**
+   * getScenarios
+   * 
+   */
+  getScenarios(scenarioCollection)
+  {
+    restData.getScenarios(this.state.region.id, scenarioCollection.id)
+    .then(scens => {
+
+      this.setState({ scenarios: scens[0].scenarios });
+      this.setState({ timePeriods: scens[0].timePeriods });
+      this.setState({ indicatorCategories: scens[0].indicatorCategories });
+      this.setState({ values: scens[0].values });
+      
+    })
+    .catch(error => {
+      console.log("getScenarios error: " + error);
+    });
+    
+    this.forceUpdate();
+    
+  }
+
+  /**
+   * setScenario
+   * @param {*} scenarioId 
+   */
+  setScenario(scenarioSelects)
+  {
+    this.setState({myScenarios : scenarioSelects});
+    
+  }
+
+  /**
+   * setPeriod
+   * @param {*} selectedPeriod 
+   */
+  setPeriod(selectedPeriod)
+  {
+    let myPeriod;
+    for(let i in this.state.timePeriods){
+      if(this.state.timePeriods[i].id === parseInt(selectedPeriod, 10)){
+        myPeriod =  this.state.timePeriods[i];   
+        break;
+      }
+    }
+    this.setState({period: myPeriod});
+    this.forceUpdate();
+  }
+
+  /**
+   * setIndicator
+   * @param {*} selectedIndicator 
+   * @param {*} selectedCategory 
+   */
+  setIndicator(selectedIndicator, selectedCategory)
+  {
+    
+    //console.log("myIndicators.selectedCategory:"+selectedCategory);
+    let indArray = this.state.myIndicators.slice();
+    indArray.push({cat: selectedCategory, ind:selectedIndicator});
+    this.setState({myIndicators: indArray});
+    
+    for(let i in this.state.myIndicators) {
+      //console.log("myIndicators.keys:"+(this.state.myIndicators[i].cat));
+    };
     this.forceUpdate();
   }
 
@@ -126,7 +206,6 @@ class App extends Component {
    * render()
    */
   render(){    
-   console.log("App.scenarionCollection:"+this.state.scenarioCollection.id);
     return (
       <div className="App">
         <Header />
@@ -140,6 +219,15 @@ class App extends Component {
           getSceCollections = {this.getSceCollections}
           setSceCollection = {this.setSceCollection}
           scenarioCollection = {this.state.scenarioCollection}
+          scenarios = {this.state.scenarios}
+          myScenarios = {this.state.myScenarios}
+          setScenario = {this.setScenario}
+          timePeriods = {this.state.timePeriods}
+          setPeriod = {this.setPeriod}
+          period = {this.state.period}
+          indicatorCategories = {this.state.indicatorCategories}
+          myIndicators = {this.state.myIndicators}
+          setIndicator = {this.setIndicator}
         />
 
       <div>Test lines for testing scroll event</div>

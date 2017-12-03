@@ -43,7 +43,8 @@ class Selections extends Component {
 
     render () {
         
-       
+       const { indicatorCategories, myIndicators,setIndicator, ...rest} = this.props;
+
         return (
             <div style={{position:'relative'}} ref={(div) => {this.menuContainer = div;}}>
                 <button type="button" className="close" id="menuToggle" onClick={() => this.toggleMenuVisibility(1)} >
@@ -55,7 +56,7 @@ class Selections extends Component {
                             Skenaarioiden valinta
                         </div>
                         <div className="panel-body">
-                            <MenuScenarios {...this.props} />
+                            <MenuScenarios {...rest} />
                         </div>
                     </div>
                     <div className="col-sm-6 panel panel-default">
@@ -63,7 +64,11 @@ class Selections extends Component {
                             Indikaattorien valinta
                         </div>
                         <div className="panel-body">
-                            <MenuIndicators />
+                            <MenuIndicators 
+                                categories = {indicatorCategories}
+                                myIndicators = {myIndicators}
+                                setIndicator = {setIndicator}
+                            />
                         </div>
                     </div>
                 </div>
@@ -72,6 +77,8 @@ class Selections extends Component {
                         regionLevel = {this.props.regionLevel}
                         region = {this.props.region}
                         scenarioCollection = {this.props.scenarioCollection}
+                        myScenarios = {this.props.myScenarios}
+                        period = {this.props.period}
                     />
                 </div>
 
