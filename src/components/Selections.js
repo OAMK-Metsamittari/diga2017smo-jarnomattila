@@ -73,13 +73,13 @@ class Selections extends Component {
                     </div>
                 </div>
                 <div className="panel panel-default noMargins" ref={(div) => {this.selectionContainer = div;}} >
-                    <SelectedItems 
+                    {/*<SelectedItems 
                         regionLevel = {this.props.regionLevel}
                         region = {this.props.region}
                         scenarioCollection = {this.props.scenarioCollection}
                         myScenarios = {this.props.myScenarios}
                         period = {this.props.period}
-                    />
+                    />*/}
                 </div>
 
             </div>

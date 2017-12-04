@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './components/Header';
 import Selections from './components/Selections';
 import restData from './data/restData';
+import MainContent from './components/MainContent';  
 
 /**
  * App
@@ -196,9 +197,6 @@ class App extends Component {
     indArray.push({cat: selectedCategory, ind:selectedIndicator});
     this.setState({myIndicators: indArray});
     
-    for(let i in this.state.myIndicators) {
-      //console.log("myIndicators.keys:"+(this.state.myIndicators[i].cat));
-    };
     this.forceUpdate();
   }
 
@@ -232,21 +230,13 @@ class App extends Component {
 
       <div>Test lines for testing scroll event</div>
 
-      <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas eleifend tempus massa, vitae imperdiet purus suscipit commodo. Donec pellentesque vehicula libero vitae vulputate. Proin ligula metus, rutrum a commodo a, vulputate nec eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut sapien ligula, lacinia eget faucibus eu, posuere eu elit. Maecenas non eros dapibus, commodo arcu nec, dictum est. Phasellus at risus ultrices, lobortis erat ac, posuere sem. Suspendisse nec lectus dictum, fermentum nunc in, viverra ex. Aliquam porta, nibh vitae rutrum cursus, dui tortor sodales dui, sed lacinia sapien neque sit amet neque. Fusce ligula quam, tempus ut eros id, iaculis commodo lorem. Vivamus in elit posuere, porttitor purus non, faucibus nulla. Maecenas maximus vestibulum odio sed tincidunt. Nunc ut mattis dolor.
-      </p>
-      <p>
-      Aenean in risus in odio facilisis feugiat. In porta nisi eget lacus egestas interdum. Mauris in posuere turpis. Maecenas sit amet congue nibh. Sed risus nisl, maximus a ex scelerisque, finibus viverra sapien. Aenean id augue justo. Integer imperdiet urna sit amet eleifend semper. Duis mi eros, pulvinar vel molestie vel, auctor a erat. Suspendisse potenti. Donec et faucibus purus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam dapibus massa sit amet velit facilisis, non pellentesque elit varius. Vivamus eu nibh imperdiet, pharetra arcu et, faucibus risus. Pellentesque ut est nec nibh porta malesuada. Nulla eleifend sapien quis varius molestie.
-      </p>
-      <p>
-      Proin sodales lacinia ligula ac imperdiet. In sollicitudin, dolor quis venenatis faucibus, neque quam molestie libero, vel ullamcorper velit neque ac nulla. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec purus elit, gravida at dignissim eu, placerat sit amet libero. Nullam fringilla gravida magna sed scelerisque. Nulla pellentesque sed mauris luctus blandit. Phasellus condimentum pharetra diam et volutpat. Aliquam rhoncus ultricies arcu elementum euismod. Sed viverra dignissim dui, quis malesuada leo ullamcorper sit amet. Curabitur scelerisque ipsum turpis, iaculis tempus felis aliquet ac. Mauris dapibus, diam ut dapibus dignissim, leo turpis sagittis felis, nec ultricies ex mi ut nunc. Morbi ultrices a sem a vulputate. Morbi pulvinar porttitor elit, at varius dolor accumsan gravida. Ut facilisis justo eu lectus elementum, in varius nulla faucibus. Nunc vel ipsum ut leo scelerisque porta eu sed nisl.
-      </p>
-      <p>
-      Fusce bibendum eget erat eu tempus. Donec nec commodo mauris. Mauris sit amet diam eu est malesuada imperdiet. Nam dictum, nisi quis semper feugiat, ligula metus efficitur mauris, quis condimentum quam ipsum vitae velit. Cras vel eros quis mauris maximus imperdiet. Nunc quis neque eget ligula imperdiet finibus. Donec urna elit, facilisis sit amet felis in, imperdiet suscipit dolor. Nunc malesuada rhoncus interdum. Maecenas a elit nec leo semper dictum.
-      </p>
-      <p>
-      Nam id eros et odio vulputate mollis id eu ligula. Nam nec tincidunt odio, et vehicula velit. Fusce vehicula vel massa ut tristique. Curabitur sollicitudin augue porta elit fringilla, vel dignissim quam imperdiet. In dapibus cursus est sit amet maximus. Duis eros ex, tristique sit amet nulla vel, facilisis consectetur massa. Cras ac nisl sit amet nunc porta suscipit. Donec ut pellentesque lorem. In aliquam enim ut libero gravida, eget gravida odio rutrum. Integer eu enim ut justo dictum feugiat non quis sem. Donec risus ex, posuere rutrum sollicitudin vel, imperdiet id arcu. Vestibulum dapibus purus at tortor tempus cursus. Cras aliquet sapien nec posuere porta.
-      </p>
+    <MainContent
+      region = {this.state.region}  
+      period = {this.state.period}
+      values = {this.state.values}
+      myIndicators = {this.state.myIndicators}
+      myScenarios = {this.state.myScenarios}
+    />
 
        
       </div>
