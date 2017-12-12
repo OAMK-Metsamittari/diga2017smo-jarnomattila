@@ -15,63 +15,81 @@ import MainContent from './components/MainContent';
 
 class App extends Component {
 
-  /**
-   * Class contructor
-   * @param {*} props 
-   */
-  constructor(props)
-  {
-    super(props);
+/**
+ * Class contructor
+ * @param {*} props 
+ */
+constructor(props)
+{
+  super(props);
 
-    //states to keep in save
-    this.state = {
-      regionLevels : [],
-      regionLevel : {},
-      regions :  [],
-      region: {},
-      scenarioCollection: {},
-      scenarios: [],
-      myScenarios: [],
-      timePeriods: [],
-      period: {},
-      indicatorCategories: [],
-      myIndicators: [],
-      values: []
-    }
-
-    this.getRegions = this.getRegions.bind(this);
-    this.getSceCollections = this.getSceCollections.bind(this);
-    this.setRegion = this.setRegion.bind(this);
-    this.setSceCollection = this.setSceCollection.bind(this);
-    this.getScenarios = this.getScenarios.bind(this);
-    this.setScenario = this.setScenario.bind(this);
-    this.setPeriod = this.setPeriod.bind(this);
-    this.setIndicator = this.setIndicator.bind(this);
+  //states to keep in save
+  this.state = {
+    regionLevels : [],
+    regionLevel : {},
+    regions :  [],
+    region: {},
+    scenarioCollection: {},
+    scenarios: [],
+    myScenarios: [],
+    timePeriods: [],
+    period: {},
+    indicatorCategories: [],
+    myIndicators: null,
+    values: [],
+    chartType : 'polar',
+    selectionsCollapse : false,
   }
 
-  /**
-   * componentDidMount
-   * Task to do in the beginning
-   */
-  componentDidMount()
-  {
-    //get all regionlevele for ListRegLevel object
-    restData.getRegionLevels().then(regLevels => {
-      this.setState({regionLevels: regLevels});
-    })
-    .catch(error => {
-      console.log("regionLevels error: " + error);
-    })
-  }
+  this.getRegions = this.getRegions.bind(this);
+  this.getSceCollections = this.getSceCollections.bind(this);
+  this.setRegion = this.setRegion.bind(this);
+  this.setSceCollection = this.setSceCollection.bind(this);
+  this.getScenarios = this.getScenarios.bind(this);
+  this.setScenario = this.setScenario.bind(this);
+  this.setPeriod = this.setPeriod.bind(this);
+  this.setIndicator = this.setIndicator.bind(this);
+  this.setChartType = this.setChartType.bind(this);
+  this.toggleCollapse = this.toggleCollapse.bind(this);
+}
 
-  /**
-   * getRegions
-   * @param {*} regLevelId 
-   */
-  getRegions(regLevelId)
-  {
+setChartType(type){
+  this.setState({chartType : type})
+}
+
+toggleCollapse(){
+  
+    const collapse = !this.state.selectionsCollapse ;
+    this.setState({selectionsCollapse : collapse});  
+
+}
+
+/**
+ * componentDidMount
+ * Task to do in the beginning
+ */
+componentDidMount()
+{
+  //get all regionlevele for ListRegLevel object
+  restData.getRegionLevels().then(regLevels => {
+    this.setState({regionLevels: regLevels});
+  })
+  .catch(error => {
+    console.log("regionLevels error: " + error);
+  })
+}
+
+/**
+ * getRegions
+ * @param {*} regLevel
+ */
+getRegions(regLevel)
+{
+  try{
+    
+    const regLevelId = regLevel.value;
     restData.getRegions(regLevelId).then(regs => {
-
+      
       for(let i in this.state.regionLevels){
         
         if(this.state.regionLevels[i].id === regLevelId ){
@@ -80,133 +98,227 @@ class App extends Component {
         }
       }
       this.setState({ regions: regs });
-      this.forceUpdate();
     })
     .catch(error => {
       console.log("getRegions error: " + error);
     });
+          
+  } catch (e) {
+    console.log("getRegions error:" + e.message);
+    this.setState({
+      regionLevel : {},
+      regions : [],
+      scenarioCollection: {},
+      scenarios: [],
+      myScenarios: [],
+      timePeriods: [],
+      period: {},
+      indicatorCategories: [],
+      myIndicators: [],
+      values: []
+    })
     
   }
+  
+  
+}
 
-  /**
-   * setRegion
-   * @param {*} regionId 
-   */
-  setRegion(regionId)
-  {
+/**
+ * setRegion
+ * @param {*} regData 
+ */
+setRegion(regData)
+{
 
-    
+
+  try{
     let myRegion;
     for(let i in this.state.regions){
-      if(this.state.regions[i].id === regionId ){
+      if(this.state.regions[i].id === regData.value ){
         myRegion =  this.state.regions[i];
         break;
       }
     }
     this.setState({region : myRegion});
-    this.forceUpdate();
+  } catch (e) {
+    console.log("setRegion error:" + e.message);
+    this.setState({region :{}});
   }
+ 
+}
 
-  /**
-   * getSceCollections
-   * Returns scenario collections under selected region
-   */
-  getSceCollections()
-  {
-     return this.state.region.scenarioCollections;
+/**
+ * getSceCollections
+ * Returns scenario collections under selected region
+ */
+getSceCollections()
+{
+  try {
+    return  this.state.region.scenarioCollections;
+  } catch (error) {
+    console.log("getSceCollections error:" + error.message);
   }
+  
+   
+  
+}
 
-  /**
-   * setSceCollection
-   * @param {*} collectionId 
-   */
-  setSceCollection(collectionId)
-  {
-   let myCollection;
-   for(let i in this.state.region.scenarioCollections){
-      if(this.state.region.scenarioCollections[i].id === collectionId ){
+/**
+ * setSceCollection
+ * @param {*} collection
+ */
+setSceCollection(collection)
+{
+  try {
+    
+    let myCollection;
+    for(let i in this.state.region.scenarioCollections){
+      if(this.state.region.scenarioCollections[i].id === collection.value ){
         myCollection =  this.state.region.scenarioCollections[i];
         break;
       }
     }
     this.setState({scenarioCollection : myCollection});
     this.getScenarios(myCollection);
-    this.forceUpdate();
-  }
 
-  /**
-   * getScenarios
-   * 
-   */
-  getScenarios(scenarioCollection)
-  {
-    restData.getScenarios(this.state.region.id, scenarioCollection.id)
-    .then(scens => {
+  } catch (error) {
 
-      this.setState({ scenarios: scens[0].scenarios });
-      this.setState({ timePeriods: scens[0].timePeriods });
-      this.setState({ indicatorCategories: scens[0].indicatorCategories });
-      this.setState({ values: scens[0].values });
-      
-    })
-    .catch(error => {
-      console.log("getScenarios error: " + error);
+    console.log("setSceCollection error:" + error.message);
+    this.setState({
+      scenarioCollection: {},
+      scenarios: [],
+      myScenarios: [],
+      timePeriods: [],
+      period: {},
+      indicatorCategories: [],
+      myIndicators: [],
+      values: []
     });
     
-    this.forceUpdate();
+  }
+  
+}
+
+/**
+ * getScenarios
+ * 
+ */
+getScenarios(scenarioCollection)
+{
+  restData.getScenarios(this.state.region.id, scenarioCollection.id)
+  .then(scens => {
+
+    this.setState({ scenarios: scens[0].scenarios });
+    this.setState({ timePeriods: scens[0].timePeriods });
+    this.setState({ indicatorCategories: scens[0].indicatorCategories });
+    this.setState({ values: scens[0].values });
+    
+  })
+  .catch(error => {
+    console.log("getScenarios error: " + error);
+  });
+  
+  //this.forceUpdate();
+  
+}
+
+/**
+ * setScenario
+ * @param {*} scenarioId 
+ */
+setScenario(scenarioSelects)
+{
+  this.setState({myScenarios : scenarioSelects});
+
+  //if empty, reset indcators
+  if(scenarioSelects.length === 0){
+    
+    this.setState({
+      timePeriods: [],
+      period: {},
+      myIndicators: [],
+      values: []
+    })
     
   }
+  
+}
 
-  /**
-   * setScenario
-   * @param {*} scenarioId 
-   */
-  setScenario(scenarioSelects)
-  {
-    this.setState({myScenarios : scenarioSelects});
-    
-  }
-
-  /**
-   * setPeriod
-   * @param {*} selectedPeriod 
-   */
-  setPeriod(selectedPeriod)
-  {
-    let myPeriod;
-    for(let i in this.state.timePeriods){
-      if(this.state.timePeriods[i].id === parseInt(selectedPeriod, 10)){
-        myPeriod =  this.state.timePeriods[i];   
-        break;
-      }
+/**
+ * setPeriod
+ * @param {*} selectedPeriod 
+ */
+setPeriod(selectedPeriod)
+{
+  let myPeriod;
+  for(let i in this.state.timePeriods){
+    if(this.state.timePeriods[i].id === parseInt(selectedPeriod, 10)){
+      myPeriod =  this.state.timePeriods[i];   
+      break;
     }
-    this.setState({period: myPeriod});
-    this.forceUpdate();
   }
+  this.setState({period: myPeriod});
+ // this.forceUpdate();
+}
 
-  /**
-   * setIndicator
-   * @param {*} selectedIndicator 
-   * @param {*} selectedCategory 
-   */
-  setIndicator(selectedIndicator, selectedCategory)
-  {
-    
-    //console.log("myIndicators.selectedCategory:"+selectedCategory);
-    let indArray = this.state.myIndicators.slice();
-    indArray.push({cat: selectedCategory, ind:selectedIndicator});
-    this.setState({myIndicators: indArray});
-    
-    this.forceUpdate();
+/**
+ * setIndicator
+ * @param {*} selectedIndicator 
+ * @param {*} selectedCategory 
+ */
+setIndicator(selectedIndicators, selectedCategory)
+{
+  
+  /*let indArray = this.state.myIndicators.slice();
+  indArray.push({cat: selectedCategory, ind:selectedIndicator});
+  this.setState({myIndicators: indArray});*/
+  
+  let newArray = [];
+  let trigger = false;
+  try {
+    this.state.myIndicators.forEach(element => {
+      if(element.cat === parseInt(selectedCategory, 10)){
+        newArray.push({
+          cat : selectedCategory,
+          ind : selectedIndicators
+        });
+        trigger = true;
+      } else {
+        newArray.push(element);
+        
+      }
+    });
+    if(!trigger){
+      newArray.push({
+        cat : selectedCategory,
+        ind : selectedIndicators
+      });
+    }
+  } catch (error) {
+    newArray.push({
+      cat : selectedCategory,
+      ind : selectedIndicators
+    });
   }
+  
+  
+  
+  
+  this.setState({myIndicators : newArray});
+  
+}
 
-  /**
-   * render()
-   */
-  render(){    
-    return (
-      <div className="App">
-        <Header />
+/**
+ * render()
+ */
+render(){    
+  return (
+    <div className="App">
+    <Header 
+       toggleCollapse = {this.toggleCollapse}
+              
+    />
+      <div id="main_container">
         <Selections 
           regionLevels = {this.state.regionLevels}
           regions = {this.state.regions}
@@ -226,22 +338,26 @@ class App extends Component {
           indicatorCategories = {this.state.indicatorCategories}
           myIndicators = {this.state.myIndicators}
           setIndicator = {this.setIndicator}
+          isCollapsed = {this.state.selectionsCollapse}
+          setChartType = {this.setChartType}
+          toggleCollapse = {this.toggleCollapse}
         />
-
-      <div>Test lines for testing scroll event</div>
-
-    <MainContent
-      region = {this.state.region}  
-      period = {this.state.period}
-      values = {this.state.values}
-      myIndicators = {this.state.myIndicators}
-      myScenarios = {this.state.myScenarios}
-    />
-
-       
+ 
+        <MainContent
+          region = {this.state.region}  
+          period = {this.state.period}
+          values = {this.state.values}
+          myIndicators = {this.state.myIndicators}
+          myScenarios = {this.state.myScenarios}
+          chartType = {this.state.chartType}
+          
+        />
       </div>
-    );
-  }
+
+      
+    </div>
+  );
+}
 }
 
 export default App;

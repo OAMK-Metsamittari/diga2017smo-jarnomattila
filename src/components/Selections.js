@@ -1,88 +1,76 @@
 import React, { Component } from 'react'
 import MenuScenarios from './MenuScenarios';
 import MenuIndicators from './MenuIndicators';
-import SelectedItems from './SelectedItems';
-import scrollToComponent from 'react-scroll-to-component';
+import {slide as Menu} from 'react-burger-menu'
 import './Selections.css';
-
 /**
  * Selections
  * Created:     2017-11-25 (Jarno Mattila)
- * Modified:    2017-11-26 (Jarno Mattila)
+ * Modified:    2017-12-11 (Jarno Mattila)
  * Description: Selections panel
  */
 
 class Selections extends Component {
 
-    constructor(props)
-    {
-        super(props);
-        this.state = 
-        {
-            toggle:'down'
-        }
-    }
     
-    toggleMenuVisibility(status)
-    {
-        let target = this.state.toggle === 'up' ? this.menuContainer : this.selectionContainer;
-        scrollToComponent(target, {
-            offset:0,
-            align: 'top',
-            duration: 1500
-        });
-        if(this.state.toggle === 'up'){
-            this.setState({toggle:'down'});
-        } 
-        else {
-            this.setState({toggle:'up'});
-        }
-        
-
-    }
-
+   
     render () {
         
-       const { indicatorCategories, myIndicators,setIndicator, ...rest} = this.props;
-
+       const { isCollapsed, indicatorCategories, myIndicators,setIndicator, ...rest} = this.props;
         return (
-            <div style={{position:'relative'}} ref={(div) => {this.menuContainer = div;}}>
-                <button type="button" className="close" id="menuToggle" onClick={() => this.toggleMenuVisibility(1)} >
-                    <span className="glyphicon glyphicon-arrow-up"></span>
-                </button>
-                <div  className="row noMargins noPaddings" id="selectionsMenu">
-                    <div className="col-sm-6 panel panel-default">
-                        <div className="panel-headeing">
-                            Skenaarioiden valinta
-                        </div>
-                        <div className="panel-body">
-                            <MenuScenarios {...rest} />
-                        </div>
+           
+            <Menu isOpen={isCollapsed} noOverlay>
+                <div className="container-fluid" id="divSelections">
+
+                    <button className="btn btn-danger" id="closeBtn" onClick={() => {this.props.toggleCollapse()}}>X</button>
+              
+                    <div className="panel-header">
+                        <h2>Skenaariot</h2>
                     </div>
-                    <div className="col-sm-6 panel panel-default">
-                        <div className="panel-headeing">
-                            Indikaattorien valinta
-                        </div>
+                    <div className="panel-body">
+                        <MenuScenarios {...rest} />
+                    </div>
+                   
+                    <div className="panel-header">
+                        <h2 >Indikaattorit</h2>
+                    </div>
                         <div className="panel-body">
                             <MenuIndicators 
                                 categories = {indicatorCategories}
                                 myIndicators = {myIndicators}
                                 setIndicator = {setIndicator}
+                                myScenarios = {this.props.myScenarios}
                             />
                         </div>
+                    
+                    <div className="panel-header">
+                        <h2 >Kaaviolaji</h2>
                     </div>
+                    <ul className="list-group">
+                        <li className="list-group-item"><button 
+                            type="button" 
+                            className="btn btn-default" 
+                            onClick={() => {this.props.setChartType('polar')}}>
+                                Polar
+                            </button>
+                        </li>
+                        <li className="list-group-item"><button 
+                            type="button" 
+                            className="btn btn-default" 
+                            onClick={() => {this.props.setChartType('column')}}>
+                                Palkki
+                            </button>
+                        </li>
+                        <li className="list-group-item">
+                            <button 
+                            type="button" 
+                            className="btn btn-default" 
+                            onClick={() => {this.props.setChartType('table')}}>
+                                Taulukko</button>
+                        </li>
+                    </ul>
                 </div>
-                <div className="panel panel-default noMargins" ref={(div) => {this.selectionContainer = div;}} >
-                    {/*<SelectedItems 
-                        regionLevel = {this.props.regionLevel}
-                        region = {this.props.region}
-                        scenarioCollection = {this.props.scenarioCollection}
-                        myScenarios = {this.props.myScenarios}
-                        period = {this.props.period}
-                    />*/}
-                </div>
-
-            </div>
+            </Menu>
         )
     }
 }

@@ -4,70 +4,113 @@ const HighchartsMore = require('highcharts-more');
 HighchartsMore(ReactHighcharts.Highcharts);
 class Chart extends Component {
 
-    render () {
+    constructor(props){
+        super(props);
 
+        this.labels = [];
+        this.data = [];
+        this.chartType = 'polar';
+
+        this.getValue = this.getValue.bind(this);
+        this.setValues = this.setValues.bind(this);
+
+    }
+
+    getValue(key){
+        let myValue = 0;
+        try {
+            this.props.values.forEach(value => {
+                
+                if( parseInt(value.scenarioId, 10) === parseInt(this.props.scenario.value, 10) 
+                && parseInt(value.timePeriodId, 10) === parseInt(this.props.period.id, 10)
+                && parseInt(value.indicatorId, 10) === parseInt(key, 10) ){
+                    myValue = parseFloat(value.value);
+                }
+            });
+        } catch (error) {
+            
+        }
+        
+        return myValue;
+    }
+
+    setValues(){
+        let stateLabels = [];
+        let stateData = [];
+        try {
+            let counter = 0;
+            this.props.myIndicators.forEach(category => {
+                category.ind.forEach(indicator => {
+                    let key = indicator.value;
+                    let label = indicator.label;
+                   let indData = this.getValue(key);
+                    stateLabels.push(label);
+                    stateData.push({'x':counter++,'y':indData});
+                });
+            });
+        } catch (error) {
+            console.log(error.message)
+        }
+        this.labels = stateLabels;
+        this.data = stateData;
+       
+    }
+
+    render () {
+        this.setValues();
        
         //props
-        const{period, region, scenario, myIndicators, values} = this.props;
+        const{period, region, scenario} = this.props;
 
-        //map indicators to get indicator keys (ids)
-        const indKeys = myIndicators.map(objectIndCategory => {
-            
-            return objectIndCategory.ind.map(objectInd => {
-                return objectInd.value;
-            })
-        });
-        
-        //map indicator keys to get indicator values
-        const indData = indKeys.map(key => {
+        //this.indicatorKeys();
 
-            //loop values and check if match
-            for(let i in values){
-                if( parseInt(values[i].scenarioId, 10) === parseInt(scenario.value, 10) 
-                    && parseInt(values[i].timePeriodId, 10) === parseInt(period.id, 10)
-                    && parseInt(values[i].indicatorId, 10) === parseInt(key, 10) ){
-                        return values[i].value;
-                    }
-            }
-        })
+        let type = this.props.chartType ==='polar';
 
-        //helper array 
-        let foundNames = [];
+       
 
-        //map indocators to get indicator names (not work)
-        const indNames = myIndicators.map(objectIndCategory => {
-            
-            return objectIndCategory.ind.map(objectInd => {
-                
-                // in not in helper array, its a new one
-                if(foundNames.indexOf(objectInd.label) === -1){
-                    foundNames.push(objectInd.label);
-                    return objectInd.label;
-                }
-                   
-            })
-        });
-
+       
         const config = {
             
             chart: {
-                polar:true,
-                type: 'column'
+                polar:type,
+                type:'column'
             },
+            pane :{
+                size:'90%'
+            },
+           
             title: {
                 text: region.name + " " 
                     + period.yearStart + " - (" 
                     + period.yearEnd + ")"
             },
-            subtitle: {
-                 text: scenario.label
+            yAxix: {
+                min: 0,
+              
+                
             },
             xAxis: {
-            categories: indNames
+               categories:this.labels
+            },
+
+           plotOptions :{
+               
+                series: {
+                    shadow: false,
+                    groupPadding:0,
+                    pointPlacement: 'on',
+                    color: '#0E7746'
+                }
+           },
+            legend: {
+                
+                verticalAlign: 'top',
+                y:20
             },
             series:[{
-                data: indData
-            }]
+                name: scenario.label,
+                data: this.data
+            }],
         };
         
         return (<div >

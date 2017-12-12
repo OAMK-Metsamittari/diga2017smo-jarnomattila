@@ -1,95 +1,123 @@
 import React, { Component } from 'react'
+import TableHtml from './TableHtml'
 const ReactHighcharts = require('react-highcharts');
-const HighchartsMore = require('highcharts-more');
-HighchartsMore(ReactHighcharts.Highcharts);
 class ChartMulti extends Component {
 
-    render () {
+    constructor(props){
+        super(props);
 
-        //props
-        const{period, region, myScenarios, myIndicators, values} = this.props;
+        this.labels = [];
+        this.series = [];
 
-        //helper array (not working)
-        let foundNames = [];
+        this.getValue = this.getValue.bind(this);
+        this.setValues = this.setValues.bind(this);
 
-        //map all scenarios
-       const allScenarios = myScenarios.map(scenario => {
+    }
 
-            //get indicator keys (ids) 
-            const indKeys = myIndicators.map(objectIndCategory => {
-                
-                return objectIndCategory.ind.map(objectInd => {
-                    return objectInd.value;
-                })
-            });
-
-            //get indicator values
-            const indData = indKeys.map(key => {
-                for(let i in values){
-                    if( parseInt(values[i].scenarioId, 10) === parseInt(scenario.value, 10) 
-                        && parseInt(values[i].timePeriodId, 10) === parseInt(period.id, 10)
-                        && parseInt(values[i].indicatorId, 10) === parseInt(key, 10) ){
-                            return values[i].value;
-                        }
+    getValue(key, scenario){
+        
+        let myValue = 0;
+        try {
+            this.props.values.forEach(value => {
+                if( parseInt(value.scenarioId, 10) === parseInt(scenario.value, 10) 
+                && parseInt(value.timePeriodId, 10) === parseInt(this.props.period.id, 10)
+                && parseInt(value.indicatorId, 10) === parseInt(key, 10) ){
+                    myValue = parseFloat(value.value);
                 }
-            })
-
-            
-            //get indicator names (not working)
-            const indNames = myIndicators.map(objectIndCategory => {
-                
-                return objectIndCategory.ind.map(objectInd => {
-
-                    //if not in helper array, get name
-                    if(foundNames.indexOf(objectInd.label) === -1){
-                        foundNames.push(objectInd.label);
-                        return objectInd.label;
-                    }
-                    
-                })
             });
-
-            //return config array for series, data and xAxix labels
-            return [scenario.label, indData, indNames];
-
-        })
-        
-        //create arrays for multi serie plots
-        const mySeries = allScenarios.map(item => {
+        } catch (error) {
             
-            return {
-                type: 'column',
-                name: item[0],
-                data: item[1]
-            }
-        })
-
-        //indicator names (not work)
-        const indNames = allScenarios.map(item => {
-            return item[2];
-        })
+        }
         
+        return myValue;
+    }
+
+    setValues(){
+        let stateLabels = [];
+        
+        let stateSeries = [];
+        try {
+
+            this.props.myScenarios.forEach(scenario => {
+                let stateData = [];
+                this.props.myIndicators.forEach(category => {
+                   
+                    category.ind.forEach(indicator => {
+                        let key = indicator.value;
+                        let label = indicator.label;
+                    let indData = this.getValue(key, scenario);
+                        stateLabels.push(label);
+                        stateData.push(indData);
+                    });
+                });
+                stateSeries.push({
+                    type: 'column',
+                    name: scenario.label,
+                    data: stateData
+                });
+            });
+        } catch (error) {
+            console.log(error.message)
+        }
+
+        this.labels = stateLabels;
+        this.series = stateSeries;
        
-        const config = {
-            
-            chart: {
-                polar:true
-            },
-            title: {
-                text: region.name + " " 
-                    + period.yearStart + " - (" 
-                    + period.yearEnd + ")"
-            },
-            
-            xAxis: {
-                categories: indNames
-            },
-            series:mySeries
-        };
+    }
+
+
+    render () {
+        this.setValues();
         
-        return (<div >
-               {<ReactHighcharts config={ config }></ReactHighcharts>}
-            </div>) 
+
+        const isPolar = this.props.chartType === 'polar' ? true : false;
+        //props
+        const{period, region} = this.props;
+
+       if(this.props.chartType !== 'table'){
+       
+           const config = {
+               
+               chart: {
+                   polar:isPolar,
+                   type:this.props.chartType
+               },
+               title: {
+                   text: region.name + " " 
+                       + period.yearStart + " - (" 
+                       + period.yearEnd + ")"
+               },
+
+               plotOptions: {
+                   series: {
+                       groupPadding : 0.1
+                   }
+               },
+               
+               xAxis: {
+                   categories:this.labels,
+                   gridLineColor: '#000000'
+               },
+               yAxis: {
+                   min: 0,
+                   
+               },
+               series:this.series,
+
+           };
+           
+           return (<div >
+                  {<ReactHighcharts config={ config }></ReactHighcharts>}
+               </div>) 
+         } else {
+            
+            return (<TableHtml 
+                        scenarios = {this.props.myScenarios}
+                        indicators = {this.props.myIndicators}
+                        values = {this.props.values}
+                        getValue = {this.getValue}
+                    />)
+         }
     }   
  
 }

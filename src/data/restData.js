@@ -10,8 +10,7 @@ import axios from 'axios';
   Use commented restUri if you don't use proxy
   See proxy field in package.json.*/
   
-//const restUrl = 'http://melatupa.azurewebsites.net';
-const restUrl = "";
+const restUrl = 'http://melatupa.azurewebsites.net';
 
 /**
  * getRegionLevels

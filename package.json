@@ -2,17 +2,21 @@
   "name": "forest-service",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://melatupa.azurewebsites.net",
   "dependencies": {
     "axios": "^0.17.1",
     "bootstrap": "^3.3.7",
     "highcharts-more": "^0.1.2",
     "react": "^16.1.1",
+    "react-bootstrap-table": "^4.2.0",
+    "react-burger-menu": "^2.1.11",
+    "react-collapse": "^4.0.3",
     "react-dom": "^16.1.1",
     "react-highcharts": "^15.0.0",
+    "react-motion": "^0.5.2",
     "react-scripts": "1.0.17",
     "react-scroll-to-component": "^1.0.2",
-    "react-select": "^1.0.1"
+    "react-select": "^1.0.1",
+    "react-side-collapse": "^2.0.5"
   },
   "scripts": {
     "start": "react-scripts start",

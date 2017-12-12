@@ -48,7 +48,7 @@ class ListRegLevel extends Component {
     getRegions = (selectedRegLevel) => {
         
         // calling getRegions with level id
-        this.props.getRegions(selectedRegLevel.value);
+        this.props.getRegions(selectedRegLevel);
     }
     
     /**
@@ -57,7 +57,7 @@ class ListRegLevel extends Component {
     render () {
 
         return (
-            <div>
+            <div className="select_container">
                 <label htmlFor="regLevelSelect">Aluetaso</label>
                 <Select 
                     value = {this.props.regionLevel ? this.props.regionLevel.id : "Any"}

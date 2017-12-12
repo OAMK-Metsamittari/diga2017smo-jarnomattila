@@ -48,23 +48,23 @@ class ListRegion extends Component {
     setRegion = (selectedRegion) => {
         
         // calling setRegion with region id
-        this.props.setRegion(selectedRegion.value);
+        this.props.setRegion(selectedRegion);
         
     }
 
 
     render () {
         return (
-            <div>
+            <div className="select_container">
                 <label htmlFor="regLevel">Alue</label>
                 <Select 
-                    value = {this.props.region.id >= 0 ? this.props.region.id : "Any"}
+                    value = {this.props.region ? this.props.region.id : "Any"}
                     onChange = {this.setRegion}
                     placeholder="Valitse"
                     id="regSelect"
                     name="regions"
                     options = {this.setRegOptions() }
-                    selectedValue = {this.props.region.id}
+                    selectedValue = {this.props.region ? this.props.region.id : null}
                 />
             </div>
         )

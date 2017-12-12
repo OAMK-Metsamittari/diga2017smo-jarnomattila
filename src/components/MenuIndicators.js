@@ -13,7 +13,7 @@ class MenuIndicators extends Component {
     render () {
 
         return (
-            <div>
+            <div className="container-fluid">
                 {
                    this.props.categories.map(category => 
 
@@ -22,6 +22,7 @@ class MenuIndicators extends Component {
                                     cat = {category} 
                                     myIndicators = {this.props.myIndicators}
                                     setIndicator = {this.props.setIndicator}
+                                    myScenarios = {this.props.myScenarios}
                                 />
                                
                             )

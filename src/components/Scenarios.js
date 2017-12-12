@@ -42,7 +42,7 @@ class Scenarios extends Component {
         let optItems = scenarios.map(scenario => {
 
             //push needed fields to opt array
-            opt.push( {value:scenario.id, label:scenario.description});
+            opt.push( {value:scenario.id, label:scenario.name});
             return optItems;
         });
         return opt;
@@ -53,11 +53,11 @@ class Scenarios extends Component {
    
     render() {
         return (
-          <div>
+          <div className="select_container">
             <label>Skenaariot</label>
             <Select
               name="filters"
-              placeholder="Filters"
+              placeholder="Valitse"
               value={this.props.myScenarios}
               options={this.setSceOptions()}
               onChange={this.setScenario}

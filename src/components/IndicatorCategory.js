@@ -12,27 +12,37 @@ import 'react-select/dist/react-select.css';
 
 class IndicatorCategory extends Component {
 
-   
     constructor(props)
     {
         super(props);
 
         //local array for saving indicatos for this category only
-        this.indValues = [];
+        this.state = {indValues : []};
         
         this.setIndicator = this.setIndicator.bind(this);
         this.setIndOptions = this.setIndOptions.bind(this);
         this.setMyOptions = this.setMyOptions.bind(this);
         
     }
-
    
     /**
      * save a new indicator in App state
      */
     setIndicator = (option) => {
         //pass cat id as param too
-        this.props.setIndicator(option, this.props.cat.id);
+        try {
+            let helpArray = [];
+            this.state.indValues.forEach(element => {
+                helpArray.push(element);
+            });
+            helpArray.push(option);
+            this.setState({indValues:option});
+
+            this.props.setIndicator(option, this.props.cat.id);
+        } catch (error) {
+            console.log("setIndicator error: " +error.message);
+        }
+
     }
 
      /**
@@ -67,33 +77,52 @@ class IndicatorCategory extends Component {
     setMyOptions()
     {
         // read all indicators from props
-        const indicatorValues = this.props.myIndicators.map(i => {
-
+        this.props.myIndicators.forEach(i => {
+            
+            let indicator = null;
             //if indicator belongs to this category, return it
             if(i.cat === this.props.cat.id){
-               return i.ind              
+                console.log("ind:" + Object.values(i.ind));
+                try {
+                    i.ind.forEach(element => {
+                        indicator =  i.ind    
+                    });
+                } catch (error) {
+                    console.log("setMyOptions error: " +error.message);
+                }
+               
+                          
             }
+            return indicator;
         })
         
-        // this is a workaround for handling undefined object issue
-        for(let i in indicatorValues){
-            
-            // if object defined, save it as option value
-            if(indicatorValues[i] !== undefined){
-                this.indValues = indicatorValues[i];
-            } 
-        }
     }
 
     
     render () {
+
+       /* try {
+            console.log(this.props.myIndicators.length)
+            this.props.myIndicators.forEach(element => {
+               //console.log("hit:"+element);
+                //console.log("myIndicators cat: " + element);
+               // console.log("myIndicators ind: " + Object.keys(element.ind));
+            });
+
+            
+        } catch (error) {
+            console.log(error.message)
+        }*/
+          
+
         const {name} = this.props.cat;
-        
+
+                
         // setting up option values
-        this.setMyOptions();
+       // this.setMyOptions();
                 
         return (
-            <div>
+            <div className="select_container">
                 <label >
                     {name}
                 </label>
@@ -101,7 +130,7 @@ class IndicatorCategory extends Component {
                 <Select
                     name="indicators"
                     placeholder="Valitse"
-                    value = {this.indValues}
+                    value = {this.state.indValues}
                     options={this.setIndOptions()}
                     onChange={this.setIndicator}
                     multi

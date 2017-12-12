@@ -17,9 +17,8 @@ class MenuScenarios extends Component {
     render () {
         
         return (
-            <div>
-                <div  className="row" >
-                    <div className="col-sm-6">
+            <div className="container-fluid">
+                
                         <ListRegLevel 
                             regionLevels = {this.props.regionLevels}
                             regionLevel = {this.props.regionLevel}
@@ -35,8 +34,6 @@ class MenuScenarios extends Component {
                             setSceCollection = {this.props.setSceCollection}
                             scenarioCollection = {this.props.scenarioCollection}
                         />
-                    </div>
-                    <div className="col-sm-6" id="divSceRight">
                         <Scenarios 
                             scenarios = {this.props.scenarios}
                             setScenario = {this.props.setScenario }   
@@ -47,8 +44,7 @@ class MenuScenarios extends Component {
                             setPeriod = {this.props.setPeriod}
                             period = {this.props.period}
                         />
-                    </div>
-                </div>
+               
                 
             </div>
         )
