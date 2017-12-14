@@ -19,11 +19,10 @@ class Selections extends Component {
        const { isCollapsed, indicatorCategories, myIndicators,setIndicator, ...rest} = this.props;
         return (
            
-            <Menu isOpen={isCollapsed} noOverlay>
+            <Menu className="selectionMenu" isOpen={isCollapsed} >
+                <div  id="toggeSelectionBtn" onClick={() => {this.props.toggleCollapse()}}><div>Indikaattorit</div></div>
                 <div className="container-fluid" id="divSelections">
 
-                    <button className="btn btn-danger" id="closeBtn" onClick={() => {this.props.toggleCollapse()}}>X</button>
-              
                     <div className="panel-header">
                         <h2>Skenaariot</h2>
                     </div>
@@ -43,32 +42,7 @@ class Selections extends Component {
                             />
                         </div>
                     
-                    <div className="panel-header">
-                        <h2 >Kaaviolaji</h2>
-                    </div>
-                    <ul className="list-group">
-                        <li className="list-group-item"><button 
-                            type="button" 
-                            className="btn btn-default" 
-                            onClick={() => {this.props.setChartType('polar')}}>
-                                Polar
-                            </button>
-                        </li>
-                        <li className="list-group-item"><button 
-                            type="button" 
-                            className="btn btn-default" 
-                            onClick={() => {this.props.setChartType('column')}}>
-                                Palkki
-                            </button>
-                        </li>
-                        <li className="list-group-item">
-                            <button 
-                            type="button" 
-                            className="btn btn-default" 
-                            onClick={() => {this.props.setChartType('table')}}>
-                                Taulukko</button>
-                        </li>
-                    </ul>
+                    
                 </div>
             </Menu>
         )

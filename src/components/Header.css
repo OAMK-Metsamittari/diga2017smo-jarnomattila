@@ -1,22 +1,54 @@
 
 @media not print{
+
+
+    
+
     header{
         background: #0e7746;
         color:#ffffff;
         margin:0;
-        padding:0.5em
+        padding:0.5em;
     
-        
+        position:relative
     }
     h1{
         margin:0;
         padding:0;
+        float:left;
     }
     header button{
-        float:right;
-        margin-right:0.5em;
-        margin-left:0.5em
+        position:absolute;
+        right:10px;
+        top:0px;
+   
     }
+    
+
+
+    #type_menu_collapse .col-sm-6{
+    }
+
+ 
+    #type_menu_collapse{
+        position:relative;
+        background:#0e7746;
+        z-index:10;
+        background:rgb(26, 77, 39);
+        height:55px;
+        display:flex;
+        margin-bottom:5px;
+    }
+
+    #type_buttons{
+        margin-left:1em
+    }
+        
+    #type_menu_collapse button{
+        margin:0 !important;
+    }
+    
+   
     
 }
 @media print{

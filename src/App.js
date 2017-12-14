@@ -39,6 +39,7 @@ constructor(props)
     values: [],
     chartType : 'polar',
     selectionsCollapse : false,
+    typesCollapse : false,
   }
 
   this.getRegions = this.getRegions.bind(this);
@@ -57,10 +58,25 @@ setChartType(type){
   this.setState({chartType : type})
 }
 
-toggleCollapse(){
-  
-    const collapse = !this.state.selectionsCollapse ;
-    this.setState({selectionsCollapse : collapse});  
+toggleCollapse(target){
+  let collapse = null;
+  let show = null;
+  let hide = null;
+
+  switch(target){
+    case "types":
+      collapse =  !this.state.typesCollapse;
+      show = "typesCollapse";
+      hide = "selectionsCollapse";
+      break;
+    default:
+      collapse =  !this.state.selectionsCollapse;
+      show = "selectionsCollapse";
+      hide = "typesCollapse";
+  }
+    // show or hide selected menu and hide other one
+    this.setState({[show] : collapse});  
+    this.setState({[hide] : false});  
 
 }
 
@@ -316,10 +332,11 @@ render(){
     <div className="App">
     <Header 
        toggleCollapse = {this.toggleCollapse}
-              
+       setChartType = {this.setChartType}
+       typesCollapse = {this.state.typesCollapse}
+       
     />
-      <div id="main_container">
-        <Selections 
+    <Selections 
           regionLevels = {this.state.regionLevels}
           regions = {this.state.regions}
           regionLevel = {this.state.regionLevel}
@@ -339,10 +356,9 @@ render(){
           myIndicators = {this.state.myIndicators}
           setIndicator = {this.setIndicator}
           isCollapsed = {this.state.selectionsCollapse}
-          setChartType = {this.setChartType}
           toggleCollapse = {this.toggleCollapse}
         />
- 
+        
         <MainContent
           region = {this.state.region}  
           period = {this.state.period}
@@ -350,14 +366,11 @@ render(){
           myIndicators = {this.state.myIndicators}
           myScenarios = {this.state.myScenarios}
           chartType = {this.state.chartType}
-          
         />
       </div>
 
-      
-    </div>
-  );
-}
+    );
+  }
 }
 
 export default App;
