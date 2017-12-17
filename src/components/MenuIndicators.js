@@ -23,6 +23,7 @@ class MenuIndicators extends Component {
                                     myIndicators = {this.props.myIndicators}
                                     setIndicator = {this.props.setIndicator}
                                     myScenarios = {this.props.myScenarios}
+                                    lang = {this.props.lang}
                                 />
                                
                             )

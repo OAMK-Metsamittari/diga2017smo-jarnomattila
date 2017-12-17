@@ -52,13 +52,15 @@ class SceCollection extends Component {
     }
 
     render () {
+        const ln = require('../config/lang-'+this.props.lang).default.menu_selections;
+        
         return (
             <div>
-                <label htmlFor="sceCollection">Skenaariokokoelma</label>
+                <label htmlFor="sceCollection">{ln.skenaariokokoelma}</label>
                 <Select 
                      value = {this.props.scenarioCollection ? this.props.scenarioCollection.id : "Any"}  
                     onChange = {this.setCollection}
-                    placeholder="Valitse"
+                    placeholder={ln.valitse}
                     id="sceColSelect"
                     name="collections"
                     options = {this.setCollectionOptions() }

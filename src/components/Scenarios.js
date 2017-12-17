@@ -52,12 +52,14 @@ class Scenarios extends Component {
 
    
     render() {
+        const ln = require('../config/lang-'+this.props.lang).default.menu_selections;
+        
         return (
           <div className="select_container">
-            <label>Skenaariot</label>
+            <label>{ln.skenaariot}</label>
             <Select
-              name="filters"
-              placeholder="Valitse"
+              name="scenarios"
+              placeholder={ln.valitse}
               value={this.props.myScenarios}
               options={this.setSceOptions()}
               onChange={this.setScenario}

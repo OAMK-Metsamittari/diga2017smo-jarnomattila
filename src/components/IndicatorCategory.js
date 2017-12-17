@@ -82,7 +82,6 @@ class IndicatorCategory extends Component {
             let indicator = null;
             //if indicator belongs to this category, return it
             if(i.cat === this.props.cat.id){
-                console.log("ind:" + Object.values(i.ind));
                 try {
                     i.ind.forEach(element => {
                         indicator =  i.ind    
@@ -100,21 +99,8 @@ class IndicatorCategory extends Component {
 
     
     render () {
-
-       /* try {
-            console.log(this.props.myIndicators.length)
-            this.props.myIndicators.forEach(element => {
-               //console.log("hit:"+element);
-                //console.log("myIndicators cat: " + element);
-               // console.log("myIndicators ind: " + Object.keys(element.ind));
-            });
-
-            
-        } catch (error) {
-            console.log(error.message)
-        }*/
-          
-
+        const ln = require('../config/lang-'+this.props.lang).default.menu_selections;  
+        
         const {name} = this.props.cat;
 
                 
@@ -129,7 +115,7 @@ class IndicatorCategory extends Component {
                
                 <Select
                     name="indicators"
-                    placeholder="Valitse"
+                    placeholder={ln.valitse}
                     value = {this.state.indValues}
                     options={this.setIndOptions()}
                     onChange={this.setIndicator}

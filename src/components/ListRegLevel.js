@@ -55,14 +55,15 @@ class ListRegLevel extends Component {
      * render UI
      */
     render () {
-
+        const ln = require('../config/lang-'+this.props.lang).default.menu_selections;
+        
         return (
             <div className="select_container">
-                <label htmlFor="regLevelSelect">Aluetaso</label>
+                <label htmlFor="regLevelSelect">{ln.aluetaso}</label>
                 <Select 
                     value = {this.props.regionLevel ? this.props.regionLevel.id : "Any"}
                     onChange = {this.getRegions}
-                    placeholder="Valitse"
+                    placeholder={ln.valitse}
                     id="regLevelSelect"
                     name="regionLevels"
                     options = {this.setRegLevelOptions() }

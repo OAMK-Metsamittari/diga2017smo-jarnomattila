@@ -15,7 +15,7 @@ import Period from './Period';
 
 class MenuScenarios extends Component {
     render () {
-        
+        const {lang} = this.props;
         return (
             <div className="container-fluid">
                 
@@ -23,26 +23,31 @@ class MenuScenarios extends Component {
                             regionLevels = {this.props.regionLevels}
                             regionLevel = {this.props.regionLevel}
                             getRegions = {this.props.getRegions}
+                            lang = {lang}
                          />
                         <ListRegion 
                             regions = {this.props.regions}
                             region = {this.props.region}
                             setRegion = {this.props.setRegion}
+                            lang = {lang}
                          />
                         <SceCollection 
                             getSceCollections = {this.props.getSceCollections}
                             setSceCollection = {this.props.setSceCollection}
                             scenarioCollection = {this.props.scenarioCollection}
+                            lang = {lang}
                         />
                         <Scenarios 
                             scenarios = {this.props.scenarios}
                             setScenario = {this.props.setScenario }   
-                            myScenarios = {this.props.myScenarios}                  
+                            myScenarios = {this.props.myScenarios} 
+                            lang = {lang}                 
                         />
                         <Period 
                             timePeriods = {this.props.timePeriods}
                             setPeriod = {this.props.setPeriod}
                             period = {this.props.period}
+                            lang = {lang}
                         />
                
                 

@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
+import InfoPopup from './InfoPopup'
+import TableHtml from './TableHtml'
 const ReactHighcharts = require('react-highcharts');
 const HighchartsMore = require('highcharts-more');
+const HighchartsExporting = require('highcharts/modules/exporting')
 HighchartsMore(ReactHighcharts.Highcharts);
+HighchartsExporting(ReactHighcharts.Highcharts);
 class Chart extends Component {
 
     constructor(props){
@@ -11,11 +15,26 @@ class Chart extends Component {
         this.data = [];
         this.chartType = 'polar';
 
+        this.modal = {
+            modalIsOpen : false,
+        }
+
         this.getValue = this.getValue.bind(this);
         this.setValues = this.setValues.bind(this);
+        this.closeModal = this.closeModal.bind(this);
+        this.openModal = this.openModal.bind(this);
 
     }
+   
 
+    closeModal(){
+        this.modal = ({modalIsOpen : false})
+    }
+
+    openModal(){
+        this.modal = ({modalIsOpen : true})
+    }
+    
     getValue(key){
         let myValue = 0;
         try {
@@ -63,59 +82,104 @@ class Chart extends Component {
         const{period, region, scenario} = this.props;
 
         //this.indicatorKeys();
+        if(this.props.chartType !== 'table'){
+            let type = this.props.chartType ==='polar';
 
-        let type = this.props.chartType ==='polar';
+            const config = {
 
-       
-
-       
-        const config = {
+                events:{
+                    click : function(event) {
+                        let lbl = this.renderer.label("kukkelikuu").attr({
+                            fill:this.getOptions().colors[0],
+                            padding:10,
+                            r:5,
+                            zIndex:8
+                        }).css({
+                            color:'#ffffff'
+                        }).add();
+                        setTimeout(function(){
+                            lbl.fadeOut();
+                        }, 1000);
+                    }
+                },
+                
+                chart: {
+                    polar:type,
+                    type:'column'
+                },
+                pane :{
+                    size:'90%'
+                },
             
-            chart: {
-                polar:type,
-                type:'column'
-            },
-            pane :{
-                size:'90%'
-            },
-           
-            title: {
-                text: region.name + " " 
-                    + period.yearStart + " - (" 
-                    + period.yearEnd + ")"
-            },
-            yAxix: {
-                min: 0,
-              
+                title: {
+                    text: region.name + " " 
+                        + period.yearStart + " - (" 
+                        + period.yearEnd + ")"
+                },
+                yAxix: {
+                    min: 0,
                 
-            },
-            xAxis: {
-               categories:this.labels
-            },
+                    
+                },
+                xAxis: {
+                categories:this.labels
+                },
 
-           plotOptions :{
-               
-                series: {
-                    shadow: false,
-                    groupPadding:0,
-                    pointPlacement: 'on',
-                    color: '#0E7746'
-                }
-           },
-            legend: {
+            plotOptions :{
                 
-                verticalAlign: 'top',
-                y:20
+                    series: {
+                        shadow: false,
+                        groupPadding:0,
+                        pointPlacement: 'on',
+                        color: '#0E7746'
+                    }
             },
-            series:[{
-                name: scenario.label,
-                data: this.data
-            }],
-        };
-        
-        return (<div >
-                <ReactHighcharts config={ config }></ReactHighcharts>
-            </div>) 
+                legend: {
+                    
+                    verticalAlign: 'top',
+                    y:20
+                },
+                series:[{
+                    name: scenario.label,
+                    data: this.data
+                }],
+            };
+            
+            return (<div className="chart_view" id="chartElement">
+                    
+                    <ReactHighcharts config={ config }></ReactHighcharts>
+                    <InfoPopup 
+                        myIndicatorsArray = {this.props.myIndicators}
+                        scenario = {scenario.label}
+                        indicatorCategories = {this.props.indicatorCategories}
+                    />
+                    <a href= { this.props.melaLink(scenario.value)
+                    
+                    } target="_blank">Tarkat tiedot</a>
+                    
+    
+                </div>) 
+        } else {
+
+            return (
+                <div>
+                    <a href= { this.props.melaLink()
+                        
+                    } target="_blank">Tarkat tiedot</a>
+                    <div className={scenario.value}>
+                        <TableHtml 
+                            scenarios = {this.props.myScenarios}
+                            indicators = {this.props.myIndicators}
+                            values = {this.props.values}
+                            getValue = {this.getValue}
+                            single = {scenario}
+                        />
+                    </div>
+                   
+                </div>
+                )
+
+        }
     }
         
   

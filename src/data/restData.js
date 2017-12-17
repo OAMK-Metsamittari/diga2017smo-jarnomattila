@@ -1,27 +1,31 @@
 import axios from 'axios';
+import config  from '../config/config.js'
 
 /**
  * Functions for getting data from REST interface
  */
 
 
-/*restUrl commented out because of Cross-Origin issue (CORS)
-  Using nodejs server as proxy to solve this.
-  Use commented restUri if you don't use proxy
-  See proxy field in package.json.*/
+//config
   
-const restUrl = 'https://melatupa.azurewebsites.net';
+const restUrl = config.restAPI.url;
+const regionLevels =  config.restAPI.regionLevels;
+
+
 
 /**
  * getRegionLevels
  */
-function getRegionLevels()
+function getRegionLevels(lang)
 {
+    const remote = axios.create({
+        baseURL: restUrl,
+        headers: {'Accept-Language': lang} 
+    });
     return new Promise((resolve, reject) => {
-    const sourceUrl =  '/regionLevels';
-
+    
         //get from REST API
-        axios.get(restUrl + sourceUrl).then(response =>{
+        remote.get(restUrl + regionLevels).then(response =>{
             resolve(response.data);
         })
         .catch(error =>{
@@ -34,14 +38,18 @@ function getRegionLevels()
 /**
  * getRegions
  */
-function getRegions(regLevelId)
+function getRegions(regLevelId, lang)
 {
+    const remote = axios.create({
+        baseURL: restUrl,
+        headers: {'Accept-Language': lang} 
+    });
     let rlId = parseInt(regLevelId, 10);
     return new Promise((resolve, reject) => {
-    const sourceUrl =  '/regionLevels/' + rlId + '/regions';
+    const sourceUrl =  regionLevels + '/' + rlId + '/regions';
 
         //get from REST API
-        axios.get(restUrl + sourceUrl).then(response =>{
+        remote.get(restUrl + sourceUrl).then(response =>{
             resolve(response.data);
         })
         .catch(error =>{
@@ -54,15 +62,19 @@ function getRegions(regLevelId)
 /**
  * getScenarios
  */
-function getScenarios(regionId, sceCollectionId)
+function getScenarios(regionId, sceCollectionId, lang)
 {
+    const remote = axios.create({
+        baseURL: restUrl,
+        headers: {'Accept-Language': lang} 
+    });
     let regId = parseInt(regionId, 10);
     let sceColId = parseInt(sceCollectionId, 10);
     return new Promise((resolve, reject) => {
     const sourceUrl =  '/scenarioCollection/' + sceColId + '/region/' + regId;
 
         //get from REST API
-        axios.get(restUrl + sourceUrl).then(response =>{
+        remote.get(restUrl + sourceUrl).then(response =>{
             resolve(response.data);
         })
         .catch(error =>{

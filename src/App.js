@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './components/Header';
 import Selections from './components/Selections';
 import restData from './data/restData';
 import MainContent from './components/MainContent';  
+import config from './config/config'
 
 /**
  * App
@@ -38,8 +40,11 @@ constructor(props)
     myIndicators: null,
     values: [],
     chartType : 'polar',
+    chartView : 'single',   //single/multi
     selectionsCollapse : false,
-    typesCollapse : false,
+    typesCollapse : true,
+    lang : 'fi',
+    page : 'frontpage'
   }
 
   this.getRegions = this.getRegions.bind(this);
@@ -51,11 +56,84 @@ constructor(props)
   this.setPeriod = this.setPeriod.bind(this);
   this.setIndicator = this.setIndicator.bind(this);
   this.setChartType = this.setChartType.bind(this);
+  this.setChartView = this.setChartView.bind(this);
   this.toggleCollapse = this.toggleCollapse.bind(this);
+  this.melaLink = this.melaLink.bind(this);
+  this.setLang = this.setLang.bind(this);
+  this.setActivePage = this.setActivePage.bind(this);
+  
+  
+}
+
+setLang(myLang){
+  this.setState({
+    regionLevels : [],
+    regionLevel : {},
+    regions :  [],
+    region: {},
+    scenarioCollection: {},
+    scenarios: [],
+    myScenarios: [],
+    timePeriods: [],
+    period: {},
+    indicatorCategories: [],
+    myIndicators: null,
+    values: [],
+    lang:myLang
+  })
+  //get all regionlevele for ListRegLevel object
+  restData.getRegionLevels(myLang).then(regLevels => {
+    this.setState({regionLevels: regLevels});
+  })
+  .catch(error => {
+    console.log("regionLevels error: " + error);
+  })
+
+  
+}
+
+setActivePage(mypage){
+  this.setState({page:mypage});
+}
+
+melaLink(singleScenario){
+
+  let scenarios = "";
+  if(singleScenario){
+    scenarios = singleScenario;
+
+  } else  {
+    this.state.myScenarios.forEach(sce => {
+      scenarios = scenarios.concat(sce.value).concat(',');
+    });
+    scenarios = scenarios.slice(0,-1);
+  }  
+
+  let indicators = "";
+  this.state.myIndicators.forEach(category => {
+      category.ind.forEach(indicator => {
+        indicators = indicators.concat(indicator.value).concat(',');
+      });
+  });
+  indicators = indicators.slice(0,-1);
+
+  return (
+    config.links.melatupa + 
+    "?lk=" + this.state.scenarioCollection.id +
+    "&ko=" + this.state.region.id +
+    "&ty=" + scenarios +
+    "&ka=" + this.state.period.id +
+    "&mj=" + indicators
+  )
+    
 }
 
 setChartType(type){
   this.setState({chartType : type})
+}
+
+setChartView(view){
+  this.setState({chartView : view})
 }
 
 toggleCollapse(target){
@@ -87,7 +165,7 @@ toggleCollapse(target){
 componentDidMount()
 {
   //get all regionlevele for ListRegLevel object
-  restData.getRegionLevels().then(regLevels => {
+  restData.getRegionLevels(this.state.lang).then(regLevels => {
     this.setState({regionLevels: regLevels});
   })
   .catch(error => {
@@ -102,9 +180,9 @@ componentDidMount()
 getRegions(regLevel)
 {
   try{
-    
-    const regLevelId = regLevel.value;
-    restData.getRegions(regLevelId).then(regs => {
+    const regLevelId = regLevel.value ? regLevel.value : regLevel;
+
+    restData.getRegions(regLevelId, this.state.lang).then(regs => {
       
       for(let i in this.state.regionLevels){
         
@@ -221,7 +299,7 @@ setSceCollection(collection)
  */
 getScenarios(scenarioCollection)
 {
-  restData.getScenarios(this.state.region.id, scenarioCollection.id)
+  restData.getScenarios(this.state.region.id, scenarioCollection.id, this.state.lang)
   .then(scens => {
 
     this.setState({ scenarios: scens[0].scenarios });
@@ -288,7 +366,6 @@ setIndicator(selectedIndicators, selectedCategory)
   /*let indArray = this.state.myIndicators.slice();
   indArray.push({cat: selectedCategory, ind:selectedIndicator});
   this.setState({myIndicators: indArray});*/
-  
   let newArray = [];
   let trigger = false;
   try {
@@ -328,37 +405,48 @@ setIndicator(selectedIndicators, selectedCategory)
  * render()
  */
 render(){    
+
   return (
     <div className="App">
     <Header 
        toggleCollapse = {this.toggleCollapse}
        setChartType = {this.setChartType}
+       setChartView = {this.setChartView}
+       chartType = {this.state.chartType}
+       chartView = {this.state.chartView}
        typesCollapse = {this.state.typesCollapse}
+       setLang = {this.setLang}
+       lang = {this.state.lang}
+       setActivePage = {this.setActivePage}
+       {...config}
        
     />
-    <Selections 
-          regionLevels = {this.state.regionLevels}
-          regions = {this.state.regions}
-          regionLevel = {this.state.regionLevel}
-          region = {this.state.region}
-          getRegions = {this.getRegions}
-          setRegion = {this.setRegion}
-          getSceCollections = {this.getSceCollections}
-          setSceCollection = {this.setSceCollection}
-          scenarioCollection = {this.state.scenarioCollection}
-          scenarios = {this.state.scenarios}
-          myScenarios = {this.state.myScenarios}
-          setScenario = {this.setScenario}
-          timePeriods = {this.state.timePeriods}
-          setPeriod = {this.setPeriod}
-          period = {this.state.period}
-          indicatorCategories = {this.state.indicatorCategories}
-          myIndicators = {this.state.myIndicators}
-          setIndicator = {this.setIndicator}
-          isCollapsed = {this.state.selectionsCollapse}
-          toggleCollapse = {this.toggleCollapse}
-        />
-        
+    <div id="outer-container">
+      <Selections 
+        regionLevels = {this.state.regionLevels}
+        regions = {this.state.regions}
+        regionLevel = {this.state.regionLevel}
+        region = {this.state.region}
+        getRegions = {this.getRegions}
+        setRegion = {this.setRegion}
+        getSceCollections = {this.getSceCollections}
+        setSceCollection = {this.setSceCollection}
+        scenarioCollection = {this.state.scenarioCollection}
+        scenarios = {this.state.scenarios}
+        myScenarios = {this.state.myScenarios}
+        setScenario = {this.setScenario}
+        timePeriods = {this.state.timePeriods}
+        setPeriod = {this.setPeriod}
+        period = {this.state.period}
+        indicatorCategories = {this.state.indicatorCategories}
+        myIndicators = {this.state.myIndicators}
+        setIndicator = {this.setIndicator}
+        isCollapsed = {this.state.selectionsCollapse}
+        toggleCollapse = {this.toggleCollapse}
+        lang = {this.state.lang}
+      />
+      <div id="page-wrap">
+      
         <MainContent
           region = {this.state.region}  
           period = {this.state.period}
@@ -366,8 +454,18 @@ render(){
           myIndicators = {this.state.myIndicators}
           myScenarios = {this.state.myScenarios}
           chartType = {this.state.chartType}
+          chartView = {this.state.chartView}
+          scenarioCollection = {this.state.scenarioCollection}
+          indicatorCategories = {this.state.indicatorCategories}
+          melaLink = {this.melaLink}
+          lang = {this.state.lang}
+          page = {this.state.page}
+          {...config}
         />
+        </div>
       </div>
+      
+    </div>
 
     );
   }

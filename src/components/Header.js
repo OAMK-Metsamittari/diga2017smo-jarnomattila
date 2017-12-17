@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import './Header.css';
-import Collapse from 'react-collapse'
+import MenuTop from './MenuTop';
+
 
 /**
 * Header
@@ -11,56 +12,72 @@ import Collapse from 'react-collapse'
 
 class Header extends Component {
 
+    constructor(props){
+        super(props);
+        this.setPage = this.setPage.bind(this);
+    }
+
+    setPage(page){
+       
+        this.props.setActivePage(page);
+    }
     
 
     render () {
+        const ln = require('../config/lang-'+this.props.lang).default.header;
+
+        
         return (
             <header className="clearfix navbar-fixed-top">
             <div className="row">
                 <div className="col-sm-6 ">
                 <h1>
-                    Metsämittari
+                    {ln.metsamittari}
                </h1>
                 </div>
-                <div className="col-sm-6 ">
+                <div className="col-sm-5 main_menu">
                     
                     <button 
                         className="btn btn-success" 
+                        id="selectMenu"
                         onClick={() => {this.props.toggleCollapse("types")}}>
-                            Valinnat
+                            {ln.valinnat}
                     </button>
+                    
+                    <div className="btn-group">
+                        {
+                           this.props.ui.lang.map(lang =>{
+
+                               const  buttonClass = this.props.lang === lang ?
+                                    "btn btn-primary" :
+                                    "btn btn-default";
+
+                               return(
+                                <button 
+                                    key = {lang}
+                                    id = {lang}
+                                    type="button" 
+                                    className={buttonClass}
+                                    onClick={() => {this.props.setLang(lang)}}>
+                                    {lang.toUpperCase()}
+                                </button>
+                               )
+                                
+                           })
+                        }
+                        
+                        
+                        
+                    </div>
+
+                </div>
+                <div className="col-sm-1 ">
+                     <a onClick={() =>{this.setPage('about')}}>{ln.tietoja}</a>
                 </div>
             </div>
-            <Collapse isOpened={this.props.typesCollapse}>
-                <div clasName="row clearfix" id="type_menu_collapse">
-                        <div className="col-sm-12">                            
-                            <div className="panel-body clearfix" >
-                            <label htmlFor="type_buttons">Kaaviolaji:</label>
-                                <div className="btn-group" id ="type_buttons">
-                               
-                                    <button 
-                                        type="button" 
-                                        className="btn btn-default" 
-                                        onClick={() => {this.props.setChartType('polar')}}>
-                                            Polar
-                                        </button>
-                                    <button 
-                                        type="button" 
-                                        className="btn btn-default" 
-                                        onClick={() => {this.props.setChartType('column')}}>
-                                            Palkki
-                                        </button>
-                                    <button 
-                                        type="button" 
-                                        className="btn btn-default" 
-                                        onClick={() => {this.props.setChartType('table')}}>
-                                            Taulukko
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-            </Collapse>
+            <MenuTop 
+                {...this.props}
+            />
             </header>
         )
     }

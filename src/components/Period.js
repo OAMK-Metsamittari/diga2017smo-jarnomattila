@@ -62,13 +62,15 @@ class Period extends Component {
     }
 
     render () {
+        const ln = require('../config/lang-'+this.props.lang).default.menu_selections;
+        
         return (
             <div className="fixed-bottom">
-                <label htmlFor="period">Ajankohta</label>
+                <label htmlFor="period">{ln.ajankohta}</label>
                 <Select 
                 value = {this.props.period.id >= 0 ? this.props.period.id : "Any"}
                 onChange = {this.setPeriod}
-                placeholder="Valitse"
+                placeholder={ln.valitse}
                 id="period"
                 name="periods"
                 options = {this.setPeriodOptions() }

@@ -29,9 +29,17 @@ class TableHtml extends Component {
             row.forEach(indicator => {
                 myrow = myrow.concat('{"indicator":"'+indicator.label+'",');
                 scenarios.forEach(scenario => {
+                    console.log("single scenario");
+                    console.log(this.props.single)
                     
-                    let value = this.getValue(indicator.value, scenario);
-                    myrow = myrow.concat('"id_'+scenario.value+'":"'+value+'",')
+                    if(this.props.single && this.props.single.value === scenario.value){
+                        let value = this.getValue(indicator.value, scenario);
+                        myrow = myrow.concat('"id_'+scenario.value+'":"'+value+'",')
+                    } else {
+                        let value = this.getValue(indicator.value, scenario);
+                        myrow = myrow.concat('"id_'+scenario.value+'":"'+value+'",')
+                    }
+                    
                     
                 })
                 myrow = myrow.slice(0,-1);
@@ -46,14 +54,49 @@ class TableHtml extends Component {
         } catch (error) {
             console.log("JSON.parse error:" + error.message);
         }
-        return (
-            <BootstrapTable data={products} striped={true} hover={true}>
-                <TableHeaderColumn isKey dataField='indicator'>Indikaattori</TableHeaderColumn>
-                {scenarios.map(column => 
-                    <TableHeaderColumn key={column.value} dataField={'id_'+column.value}>{column.label}</TableHeaderColumn>
-                )}
-            </BootstrapTable>
-        )
+
+        if(this.props.single){
+            return (
+                <BootstrapTable 
+                    data={products} 
+                    striped={true} 
+                    hover={true}>
+                    <TableHeaderColumn 
+                        isKey 
+                        dataField='indicator'>
+                            Indikaattori
+                    </TableHeaderColumn>
+                    <TableHeaderColumn 
+                        key={this.props.single.value} 
+                        dataField={'id_'+this.props.single.value}>
+                            {this.props.single.label}
+                    </TableHeaderColumn>
+                </BootstrapTable>
+            )
+
+        } else {
+            return (
+                <BootstrapTable 
+                    data={products} 
+                    striped={true} 
+                    hover={true}>
+                    <TableHeaderColumn 
+                        isKey 
+                        dataField='indicator'>
+                            Indikaattori
+                        </TableHeaderColumn>
+                    {
+                        scenarios.map(column => 
+                            <TableHeaderColumn 
+                                key={column.value}
+                                dataField={'id_'+column.value}>
+                                    {column.label}
+                            </TableHeaderColumn>
+                    )}
+                </BootstrapTable>
+            )
+        }
+        
     }
 }
 

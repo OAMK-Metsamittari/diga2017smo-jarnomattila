@@ -18,24 +18,30 @@
         float:left;
     }
     header button{
-        position:absolute;
-        right:10px;
-        top:0px;
    
     }
-    
-
-
-    #type_menu_collapse .col-sm-6{
+    .main_menu{
+        text-align:right
     }
-
+    .main_menu #selectMenu{
+        margin-left:0.5em;
+        margin-right:0.5em
+    }
+    
+    header a{
+        color:#fff;
+        cursor:pointer
+    }
+    header a:hover{
+        color:#fff;
+        cursor:pointer
+    }
  
     #type_menu_collapse{
         position:relative;
         background:#0e7746;
         z-index:10;
         background:rgb(26, 77, 39);
-        height:55px;
         display:flex;
         margin-bottom:5px;
     }
@@ -52,7 +58,8 @@
     
 }
 @media print{
-    header button{
+    header button, header a, #type_menu_collapse{
         display:none !important;
     }
+    
 }

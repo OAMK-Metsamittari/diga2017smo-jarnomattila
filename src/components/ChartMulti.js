@@ -107,16 +107,27 @@ class ChartMulti extends Component {
            };
            
            return (<div >
+                <a href= { this.props.melaLink()
+                   
+                } target="_blank">Tarkat tiedot</a>
+
                   {<ReactHighcharts config={ config }></ReactHighcharts>}
                </div>) 
          } else {
             
-            return (<TableHtml 
+            return (
+                <div>
+                    <a href= { this.props.melaLink()
+                        
+                    } target="_blank">Tarkat tiedot</a>
+                    <TableHtml 
                         scenarios = {this.props.myScenarios}
                         indicators = {this.props.myIndicators}
                         values = {this.props.values}
                         getValue = {this.getValue}
-                    />)
+                    />
+                </div>
+                )
          }
     }   
  

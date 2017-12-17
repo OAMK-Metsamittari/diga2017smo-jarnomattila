@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import MenuScenarios from './MenuScenarios';
 import MenuIndicators from './MenuIndicators';
-import {slide as Menu} from 'react-burger-menu'
+import {push as Menu} from 'react-burger-menu'
 import './Selections.css';
 /**
  * Selections
@@ -15,23 +15,35 @@ class Selections extends Component {
     
    
     render () {
-        
-       const { isCollapsed, indicatorCategories, myIndicators,setIndicator, ...rest} = this.props;
+        const ln = require('../config/lang-'+this.props.lang).default.menu_selections;  
+        const { isCollapsed, indicatorCategories, myIndicators,setIndicator, ...rest} = this.props;
+
+        const verticalPosition = this.props.lang === 'en' ? {left:'-95px'} :{left:'-125px'};
+
         return (
            
-            <Menu className="selectionMenu" isOpen={isCollapsed} >
-                <div  id="toggeSelectionBtn" onClick={() => {this.props.toggleCollapse()}}><div>Indikaattorit</div></div>
+            <Menu 
+                className="selectionMenu" 
+                isOpen={isCollapsed} 
+                outerContainerId={"outer-container"} 
+                pageWrapId={"page-wrap"}
+                disableOverlayClick
+                customBurgerIcon = {false}
+                customCrossIcon = {false}
+                noOverlay
+            >
+                <div  id="toggeSelectionBtn" onClick={() => {this.props.toggleCollapse()}}><div style={verticalPosition}>{ln.indikaattorit}</div></div>
                 <div className="container-fluid" id="divSelections">
 
                     <div className="panel-header">
-                        <h2>Skenaariot</h2>
+                        <h2>{ln.skenaariot}</h2>
                     </div>
                     <div className="panel-body">
                         <MenuScenarios {...rest} />
                     </div>
                    
                     <div className="panel-header">
-                        <h2 >Indikaattorit</h2>
+                        <h2 >{ln.indikaattorit}</h2>
                     </div>
                         <div className="panel-body">
                             <MenuIndicators 
@@ -39,11 +51,13 @@ class Selections extends Component {
                                 myIndicators = {myIndicators}
                                 setIndicator = {setIndicator}
                                 myScenarios = {this.props.myScenarios}
+                                lang = {this.props.lang}
                             />
                         </div>
                     
                     
                 </div>
+                
             </Menu>
         )
     }

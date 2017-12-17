@@ -18,6 +18,7 @@ class ListRegion extends Component {
         this.setRegion = this.setRegion.bind(this);
     }
 
+    
     /**
      * setRegOptions
      * Sets Select options
@@ -54,13 +55,15 @@ class ListRegion extends Component {
 
 
     render () {
+        const ln = require('../config/lang-'+this.props.lang).default.menu_selections;
+        
         return (
             <div className="select_container">
-                <label htmlFor="regLevel">Alue</label>
+                <label htmlFor="regLevel">{ln.alue}</label>
                 <Select 
                     value = {this.props.region ? this.props.region.id : "Any"}
                     onChange = {this.setRegion}
-                    placeholder="Valitse"
+                    placeholder={ln.valitse}
                     id="regSelect"
                     name="regions"
                     options = {this.setRegOptions() }

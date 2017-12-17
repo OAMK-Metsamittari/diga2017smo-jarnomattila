@@ -13,11 +13,13 @@
     "react-collapse": "^4.0.3",
     "react-dom": "^16.1.1",
     "react-highcharts": "^15.0.0",
+    "react-html-parser": "^2.0.2",
     "react-motion": "^0.5.2",
     "react-scripts": "1.0.17",
     "react-scroll-to-component": "^1.0.2",
     "react-select": "^1.0.1",
-    "react-side-collapse": "^2.0.5"
+    "react-side-collapse": "^2.0.5",
+    "react-skylight": "^0.5.0"
   },
   "scripts": {
     "start": "react-scripts start",
