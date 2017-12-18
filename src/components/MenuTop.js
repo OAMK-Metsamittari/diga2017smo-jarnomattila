@@ -1,6 +1,13 @@
 import React, { Component } from 'react'
 import Collapse from 'react-collapse'
 
+/**
+* MenuTop
+* Created:     2017-11-25 (Jarno Mattila)
+* Modified:    2017-11-27 (Jarno Mattila)
+* chart type and chart view selection panel
+*/
+
 class MenuTop extends Component {
 
     constructor(props){
@@ -9,7 +16,15 @@ class MenuTop extends Component {
         this.buttonType = this.buttonType.bind(this);
     }
 
+    /**
+     * buttonType
+     * @param {*} button 
+     * 
+     * Controlling cative buttons. 
+     * (This is a bit clumsy way, but works)
+     */
     buttonType(button){
+
         switch(button){
 
             case "typePolar":

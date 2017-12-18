@@ -1,3 +1,7 @@
+/**
+Styles for main content, chars and popups
+**/
+
 .main_content{
     padding-top:120px;
     padding-left:80px;
@@ -13,8 +17,10 @@
     border-bottom:1px solid #ccc;
     padding-top:1em;
     padding-bottom:1em;
+    position:relative;
+    max-width:800px;
 }
-.info_popup{
+.info_popup, section.category_popup{
     background:rgb(228, 235, 228);
     color:#000;
     overflow-y:auto;
@@ -24,7 +30,6 @@
 .info_popup h4{
     font-size:100%;
     margin-top:1.5em;
-    font-weight:bold;
     margin-left:1em;
     margin-right:1em;
 }
@@ -34,4 +39,15 @@
 }
 .chart_view button{
     margin:1em
+}
+section.category_popup{
+    background:transparent;
+    display:inline-table;
+    margin-right:0.2em;
+    position:relative;
+}
+section.category_popup .glyphicon{
+    color:white !important;
+    text-decoration: none;
+    cursor:pointer
 }

@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import CategoryPopup from './CategoryPopup'
 
 
 /**
  * Scenarios
  * Created:     2017-12-02 (Jarno Mattila)
- * Modified:    2017-12-03 (Jarno Mattila)
- * Description: 
+ * Modified:    2017-12-18 (Jarno Mattila)
+ * Description: Indicator selection menu
  */
 
 class IndicatorCategory extends Component {
@@ -21,15 +22,16 @@ class IndicatorCategory extends Component {
         
         this.setIndicator = this.setIndicator.bind(this);
         this.setIndOptions = this.setIndOptions.bind(this);
-        this.setMyOptions = this.setMyOptions.bind(this);
         
     }
    
-    /**
+    /**setIndicator
      * save a new indicator in App state
      */
+
     setIndicator = (option) => {
-        //pass cat id as param too
+
+        //add new option as a indicator to state array
         try {
             let helpArray = [];
             this.state.indValues.forEach(element => {
@@ -67,52 +69,23 @@ class IndicatorCategory extends Component {
         });
         return opt;
     }
-
-    /**
-     * setMyOptions()
-     * Desc:    While creating multiple categories from this class
-     *          it is necessary to indentify the category and get selected
-     *          options for this category only
-     */
-    setMyOptions()
-    {
-        // read all indicators from props
-        this.props.myIndicators.forEach(i => {
-            
-            let indicator = null;
-            //if indicator belongs to this category, return it
-            if(i.cat === this.props.cat.id){
-                try {
-                    i.ind.forEach(element => {
-                        indicator =  i.ind    
-                    });
-                } catch (error) {
-                    console.log("setMyOptions error: " +error.message);
-                }
-               
-                          
-            }
-            return indicator;
-        })
-        
-    }
-
     
     render () {
+        //import texts from lang-files
         const ln = require('../config/lang-'+this.props.lang).default.menu_selections;  
-        
-        const {name} = this.props.cat;
-
-                
-        // setting up option values
-       // this.setMyOptions();
-                
+        //props
+        const {name, description} = this.props.cat;
+       
         return (
             <div className="select_container">
-                <label >
-                    {name}
+                <label>
+                    <CategoryPopup 
+                        name = {name}
+                        description = {description}
+                    />
+                    {name} 
+                    
                 </label>
-               
                 <Select
                     name="indicators"
                     placeholder={ln.valitse}

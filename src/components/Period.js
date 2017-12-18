@@ -53,12 +53,13 @@ class Period extends Component {
     setPeriod = (selectedPeriod) => {
         
         // calling setRegion with region id
-        if(selectedPeriod.value){
-            this.props.setPeriod(selectedPeriod.value);
+        try {
+            if(selectedPeriod.value){
+                this.props.setPeriod(selectedPeriod.value);
+            }
+        } catch (error) {
+            console.log(" setPeriod error:" + error.message)
         }
-       
-        
-
     }
 
     render () {

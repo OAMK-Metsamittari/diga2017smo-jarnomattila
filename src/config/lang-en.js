@@ -1,7 +1,7 @@
 const ln =
 {
     header  :   {
-        "metsamittari"  :   "Forest Service",
+        "metsamittari"  :   "Forest Indicator Service",
         "valinnat"      :   "Options",
         "tietoja"       :   "About"
     },
@@ -32,6 +32,14 @@ const ln =
         "title"     :   "Forest Service - about",
         "p1"        :   "Author: Jarno Mattila, OUAS, 2017",
         "p2"        :   "Feedback: " 
+    },
+
+    chart   :   {
+        "metsamittari"  :   "Forest Indicator Service",
+        "tarkat_tiedot" :   "Absolute values - MELA TuPa"
+    },
+    table_view   :   {
+        "indikaattori"  :   "Indicator"
     }
 
 }

@@ -1,24 +1,43 @@
 import React, { Component } from 'react'
 import TableHtml from './TableHtml'
+import InfoPopup from './InfoPopup'
 const ReactHighcharts = require('react-highcharts');
+
+/**
+ * ChartMulti
+ * Created:     2017-12-xx (Jarno Mattila)
+ * Modified:    2017-12-18 (Jarno Mattila)
+ * Description: Multi Scenario chart
+ */
+
 class ChartMulti extends Component {
 
     constructor(props){
         super(props);
 
+        //chart labels and values
         this.labels = [];
         this.series = [];
 
-        this.getValue = this.getValue.bind(this);
-        this.setValues = this.setValues.bind(this);
+        this.getValue = this.getValue.bind(this);       //get this values from all values
+        this.setValues = this.setValues.bind(this);     //save this value to array
 
     }
 
+    /**
+     * getValue
+     * @param {*} key 
+     * 
+     * Reads all values and pics values for this chart only
+     */
     getValue(key, scenario){
         
         let myValue = 0;
         try {
+             //iterate all values
             this.props.values.forEach(value => {
+
+                //if match, save the value as float
                 if( parseInt(value.scenarioId, 10) === parseInt(scenario.value, 10) 
                 && parseInt(value.timePeriodId, 10) === parseInt(this.props.period.id, 10)
                 && parseInt(value.indicatorId, 10) === parseInt(key, 10) ){
@@ -28,20 +47,31 @@ class ChartMulti extends Component {
         } catch (error) {
             
         }
-        
+        //return value
         return myValue;
     }
 
+     /**
+     * setValues
+     * 
+     * Sets found values to array to pass to the chart
+     */
     setValues(){
+
+        //helpers for temporary saving
         let stateLabels = [];
-        
         let stateSeries = [];
         try {
-
+            //iterate all selected scenarios
             this.props.myScenarios.forEach(scenario => {
+
+                //helper array for temp savin data
                 let stateData = [];
+
+                //iterate indicators starting from categories
                 this.props.myIndicators.forEach(category => {
                    
+                    //iterate indicators and save values to temp array
                     category.ind.forEach(indicator => {
                         let key = indicator.value;
                         let label = indicator.label;
@@ -50,6 +80,8 @@ class ChartMulti extends Component {
                         stateData.push(indData);
                     });
                 });
+
+                //create series for each scenario
                 stateSeries.push({
                     type: 'column',
                     name: scenario.label,
@@ -60,6 +92,7 @@ class ChartMulti extends Component {
             console.log(error.message)
         }
 
+        //save labels and series to member arrays
         this.labels = stateLabels;
         this.series = stateSeries;
        
@@ -67,15 +100,24 @@ class ChartMulti extends Component {
 
 
     render () {
+
+        //import texts from lang-files
+        const ln = require('../config/lang-'+this.props.lang).default.chart;
+        
+        //start by setting values
         this.setValues();
         
 
+        //set chart type polar boolean
         const isPolar = this.props.chartType === 'polar' ? true : false;
+
         //props
         const{period, region} = this.props;
 
+        // if type not table
        if(this.props.chartType !== 'table'){
        
+            //chart configuration
            const config = {
                
                chart: {
@@ -103,29 +145,53 @@ class ChartMulti extends Component {
                    
                },
                series:this.series,
+                credits :{
+                    text: ln.metsamittari
+                },
 
            };
            
-           return (<div >
+           return (<div className="chart_view">
+                
+                {/*chart*/}
+                {<ReactHighcharts config={ config }></ReactHighcharts>}
+
+                 {/*more info popup*/}
+                <InfoPopup 
+                    myIndicatorsArray = {this.props.myIndicators}
+                    scenario = " "
+                    indicatorCategories = {this.props.indicatorCategories}
+                />
+
+                 {/*mela tupa link*/}
                 <a href= { this.props.melaLink()
                    
-                } target="_blank">Tarkat tiedot</a>
-
-                  {<ReactHighcharts config={ config }></ReactHighcharts>}
+                } target="_blank">{ln.tarkat_tiedot}</a>
                </div>) 
          } else {
             
+             // table view
             return (
-                <div>
-                    <a href= { this.props.melaLink()
-                        
-                    } target="_blank">Tarkat tiedot</a>
+                <div className="chart_view">
+                    
                     <TableHtml 
                         scenarios = {this.props.myScenarios}
                         indicators = {this.props.myIndicators}
                         values = {this.props.values}
                         getValue = {this.getValue}
+                        lang = {this.props.lang}
                     />
+                     {/*more info popup*/}
+                     <InfoPopup 
+                        myIndicatorsArray = {this.props.myIndicators}
+                        indicatorCategories = {this.props.indicatorCategories}
+                    />
+
+                    {/*mela tupa link*/}
+                    
+                    <a href= { this.props.melaLink()
+                    
+                    } target="_blank">{ln.tarkat_tiedot}</a>
                 </div>
                 )
          }

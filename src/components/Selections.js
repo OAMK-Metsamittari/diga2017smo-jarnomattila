@@ -32,7 +32,9 @@ class Selections extends Component {
                 customCrossIcon = {false}
                 noOverlay
             >
-                <div  id="toggeSelectionBtn" onClick={() => {this.props.toggleCollapse()}}><div style={verticalPosition}>{ln.indikaattorit}</div></div>
+                <div  id="toggeSelectionBtn" onClick={() => {this.props.toggleCollapse()}}>
+                    <div style={verticalPosition}>{ln.indikaattorit}</div>
+                </div>
                 <div className="container-fluid" id="divSelections">
 
                     <div className="panel-header">

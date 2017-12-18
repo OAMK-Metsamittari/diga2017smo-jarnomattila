@@ -32,7 +32,15 @@ const ln =
         "title"     :   "Metsämittari - tietoja",
         "p1"        :   "Tekijä: Jarno Mattila, OAMK, 2017",
         "p2"        :   "Palautetta sivustosta: " 
+    },
+    chart   :   {
+        "metsamittari"  :   "Metsämittari",
+        "tarkat_tiedot" :   "Tarkat tiedot - MELA TuPa"
+    },
+    table_view   :   {
+        "indikaattori"  :   "Indikaattori"
     }
+
 
 
 }

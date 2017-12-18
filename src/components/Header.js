@@ -6,7 +6,7 @@ import MenuTop from './MenuTop';
 /**
 * Header
 * Created:     2017-11-25 (Jarno Mattila)
-* Modified:    2017-11-25 (Jarno Mattila)
+* Modified:    2017-12-18 (Jarno Mattila)
 * Description: 
 */
 
@@ -14,16 +14,22 @@ class Header extends Component {
 
     constructor(props){
         super(props);
-        this.setPage = this.setPage.bind(this);
+        this.setPage = this.setPage.bind(this); //setting acrive page
     }
 
+    /**
+     * setPage
+     * @param {*} page 
+     * 
+     * Sets the selecte page as active
+     */
     setPage(page){
-       
         this.props.setActivePage(page);
     }
     
 
     render () {
+         //import texts from lang-files
         const ln = require('../config/lang-'+this.props.lang).default.header;
 
         
@@ -46,6 +52,7 @@ class Header extends Component {
                     
                     <div className="btn-group">
                         {
+                            //read lagns from config and print buttons as group
                            this.props.ui.lang.map(lang =>{
 
                                const  buttonClass = this.props.lang === lang ?
@@ -71,10 +78,13 @@ class Header extends Component {
                     </div>
 
                 </div>
+                {/* About button*/}
                 <div className="col-sm-1 ">
                      <a onClick={() =>{this.setPage('about')}}>{ln.tietoja}</a>
                 </div>
             </div>
+
+            {/*MenuTop includes chart type and chart view controls*/}
             <MenuTop 
                 {...this.props}
             />
