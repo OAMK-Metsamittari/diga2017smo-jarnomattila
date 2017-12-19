@@ -11,7 +11,7 @@ import config from './config/config'
 /**
  * App
  * Created:     2017-11-25 (Jarno Mattila)
- * Modified:    2017-11-27 (Jarno Mattila)
+ * Modified:    2017-12-19   (Jarno Mattila)
  * Description: Main class 
  */
 
@@ -25,28 +25,33 @@ constructor(props)
 {
   super(props);
 
-  //states to keep in save
+  /**
+   * state variables
+   */
   this.state = {
-    regionLevels : [],
-    regionLevel : {},
-    regions :  [],
-    region: {},
-    scenarioCollection: {},
-    scenarios: [],
-    myScenarios: [],
-    timePeriods: [],
-    period: {},
-    indicatorCategories: [],
-    myIndicators: null,
-    values: [],
-    chartType : 'polar',
-    chartView : 'single',   //single/multi
-    selectionsCollapse : false,
-    typesCollapse : true,
-    lang : 'fi',
-    page : 'frontpage'
+    regionLevels : [],        //all regionlevels
+    regionLevel : {},         //selected region level
+    regions :  [],            //all regions under selected level
+    region: {},               //selected region
+    scenarioCollection: {},   //available scenario collections for region
+    scenarios: [],            //senarios under selecte collection
+    myScenarios: [],          //selected scenarios
+    timePeriods: [],          //available time periods
+    period: {},               //selected perios
+    indicatorCategories: [],  //indicator cats based on selections above
+    myIndicators: null,       //selected indicators
+    values: [],               //all values, based on selections above
+    chartType : 'polar',      //default chat type
+    chartView : 'single',     //default chart view single/multi
+    selectionsCollapse : false, //selection menu visibility default (unvisible)
+    typesCollapse : true,     //chart menu visibility default (visible)
+    lang : 'fi',              //default language
+    page : 'frontpage'        //default start page
   }
 
+  /**
+   * Methods
+   */
   this.getRegions = this.getRegions.bind(this);
   this.getSceCollections = this.getSceCollections.bind(this);
   this.setRegion = this.setRegion.bind(this);
@@ -61,11 +66,34 @@ constructor(props)
   this.melaLink = this.melaLink.bind(this);
   this.setLang = this.setLang.bind(this);
   this.setActivePage = this.setActivePage.bind(this);
-  
+  this.setResponsiveValues = this.setResponsiveValues.bind(this);
   
 }
 
+setResponsiveValues(){
+  if(window.innerWidth > 750){
+    this.setState({
+      selectionsCollapse : true,
+      typesCollapse : true
+    });
+  } else {
+    this.setState({
+      selectionsCollapse : false,
+      typesCollapse : false
+    });
+  }
+
+}
+
+/**
+ * setLang
+ * @param {*} myLang 
+ * 
+ * set selected language 
+ */
 setLang(myLang){
+
+  // reset state vars that are affected by this change
   this.setState({
     regionLevels : [],
     regionLevel : {},
@@ -81,34 +109,52 @@ setLang(myLang){
     values: [],
     lang:myLang
   })
-  //get all regionlevele for ListRegLevel object
+  //get all regionlevels for ListRegLevel object
+  //has to be after resetting state
   restData.getRegionLevels(myLang).then(regLevels => {
     this.setState({regionLevels: regLevels});
   })
   .catch(error => {
     console.log("regionLevels error: " + error);
-  })
-
-  
+  })  
 }
 
+/**
+ * setActivePage
+ * @param {*} mypage 
+ * sets the static page if not chat view
+ */
 setActivePage(mypage){
   this.setState({page:mypage});
 }
 
+/**
+ * melaLink
+ * @param {*} singleScenario 
+ * Returns MELA TuPa link with 
+ * required parameters
+ */
 melaLink(singleScenario){
 
+  // init scenario string
   let scenarios = "";
+
+  // checking link type (single/multi)
   if(singleScenario){
     scenarios = singleScenario;
 
-  } else  {
+  }
+  //if multi, loop scenarios and build 
+  //a comma separated string of scenario ids
+  else  {
     this.state.myScenarios.forEach(sce => {
       scenarios = scenarios.concat(sce.value).concat(',');
     });
+    //remove redudant comma
     scenarios = scenarios.slice(0,-1);
   }  
 
+  //the same as above for indicators
   let indicators = "";
   this.state.myIndicators.forEach(category => {
       category.ind.forEach(indicator => {
@@ -117,6 +163,7 @@ melaLink(singleScenario){
   });
   indicators = indicators.slice(0,-1);
 
+  //return link as a string
   return (
     config.links.melatupa + 
     "?lk=" + this.state.scenarioCollection.id +
@@ -128,19 +175,39 @@ melaLink(singleScenario){
     
 }
 
+/**
+ * setChartType
+ * @param {*} type 
+ * Sets the selected chart type
+ * (column, polar etc.)
+ */
 setChartType(type){
   this.setState({chartType : type})
 }
 
+/**
+ * setChartView
+ * @param {*} view 
+ * Sets the selected view
+ * (single, multi)
+ */
 setChartView(view){
   this.setState({chartView : view})
 }
 
+/**
+ * toggleCollapse
+ * @param {*} target 
+ * Toggle chart menu visibility
+ */
 toggleCollapse(target){
+
+  //init values
   let collapse = null;
   let show = null;
   let hide = null;
 
+  //set values
   switch(target){
     case "types":
       collapse =  !this.state.typesCollapse;
@@ -164,6 +231,12 @@ toggleCollapse(target){
  */
 componentDidMount()
 {
+
+  //responsive layout
+  this.setResponsiveValues();
+
+
+
   //get all regionlevele for ListRegLevel object
   restData.getRegionLevels(this.state.lang).then(regLevels => {
     this.setState({regionLevels: regLevels});
@@ -196,7 +269,8 @@ getRegions(regLevel)
     .catch(error => {
       console.log("getRegions error: " + error);
     });
-          
+  
+  //if not region level reset selections
   } catch (e) {
     console.log("getRegions error:" + e.message);
     this.setState({
@@ -211,20 +285,16 @@ getRegions(regLevel)
       myIndicators: [],
       values: []
     })
-    
   }
-  
-  
 }
 
 /**
  * setRegion
  * @param {*} regData 
+ * set selected region in state var
  */
 setRegion(regData)
 {
-
-
   try{
     let myRegion;
     for(let i in this.state.regions){
@@ -234,7 +304,9 @@ setRegion(regData)
       }
     }
     this.setState({region : myRegion});
-  } catch (e) {
+  } 
+  //if not selected, reset the state
+  catch (e) {
     console.log("setRegion error:" + e.message);
     this.setState({region :{}});
   }
@@ -251,20 +323,19 @@ getSceCollections()
     return  this.state.region.scenarioCollections;
   } catch (error) {
     console.log("getSceCollections error:" + error.message);
-  }
-  
-   
-  
+  }  
 }
 
 /**
  * setSceCollection
  * @param {*} collection
+ * Sets stae of selected scenario collection
  */
 setSceCollection(collection)
 {
   try {
-    
+
+    //loop collections and pick uo the selected one
     let myCollection;
     for(let i in this.state.region.scenarioCollections){
       if(this.state.region.scenarioCollections[i].id === collection.value ){
@@ -272,10 +343,14 @@ setSceCollection(collection)
         break;
       }
     }
+    //save collections in state and call 
+    // get scenarios for it
     this.setState({scenarioCollection : myCollection});
     this.getScenarios(myCollection);
 
-  } catch (error) {
+  } 
+  // if no collections, reset state
+  catch (error) {
 
     console.log("setSceCollection error:" + error.message);
     this.setState({
@@ -288,14 +363,13 @@ setSceCollection(collection)
       myIndicators: [],
       values: []
     });
-    
   }
-  
 }
 
 /**
  * getScenarios
- * 
+ * @param {*} scenarioCollection 
+ * Gets scenarios under selected collection
  */
 getScenarios(scenarioCollection)
 {
@@ -310,15 +384,13 @@ getScenarios(scenarioCollection)
   })
   .catch(error => {
     console.log("getScenarios error: " + error);
-  });
-  
-  //this.forceUpdate();
-  
+  }); 
 }
 
 /**
  * setScenario
- * @param {*} scenarioId 
+ * @param {*} scenarioSelects 
+ * Set selected scenario in state
  */
 setScenario(scenarioSelects)
 {
@@ -332,15 +404,14 @@ setScenario(scenarioSelects)
       period: {},
       myIndicators: [],
       values: []
-    })
-    
+    }) 
   }
-  
 }
 
 /**
  * setPeriod
  * @param {*} selectedPeriod 
+ * Sets time period in state
  */
 setPeriod(selectedPeriod)
 {
@@ -352,53 +423,60 @@ setPeriod(selectedPeriod)
     }
   }
   this.setState({period: myPeriod});
- // this.forceUpdate();
 }
 
 /**
  * setIndicator
  * @param {*} selectedIndicator 
  * @param {*} selectedCategory 
+ * Adds selected indicator in the selected indicator array
  */
 setIndicator(selectedIndicators, selectedCategory)
 {
   
-  /*let indArray = this.state.myIndicators.slice();
-  indArray.push({cat: selectedCategory, ind:selectedIndicator});
-  this.setState({myIndicators: indArray});*/
+  //helper array for temp saving
   let newArray = [];
+
+  //trigger for passing evaluation value out of the loop
   let trigger = false;
+
+  //loop selected indicators
   try {
     this.state.myIndicators.forEach(element => {
+
+      //if selected category exists, add new indicator under the category
       if(element.cat === parseInt(selectedCategory, 10)){
         newArray.push({
           cat : selectedCategory,
           ind : selectedIndicators
         });
+        //set trigger
         trigger = true;
-      } else {
+      } 
+      // if not exists, keep the old one
+      else {
         newArray.push(element);
-        
       }
     });
+
+    //if no trigger add new indicator
     if(!trigger){
       newArray.push({
         cat : selectedCategory,
         ind : selectedIndicators
       });
     }
-  } catch (error) {
+  } 
+  //in error case, add the ne one
+  catch (error) {
     newArray.push({
       cat : selectedCategory,
       ind : selectedIndicators
     });
   }
   
-  
-  
-  
+  //save in state
   this.setState({myIndicators : newArray});
-  
 }
 
 /**
@@ -408,6 +486,8 @@ render(){
 
   return (
     <div className="App">
+
+    {/*Top header with title, lang menu, menu toggle and about*/}
     <Header 
        toggleCollapse = {this.toggleCollapse}
        setChartType = {this.setChartType}
@@ -421,7 +501,11 @@ render(){
        {...config}
        
     />
+
+    {/*wrapper*/}
     <div id="outer-container">
+
+      {/*indicator selection menu*/}
       <Selections 
         regionLevels = {this.state.regionLevels}
         regions = {this.state.regions}
@@ -445,8 +529,11 @@ render(){
         toggleCollapse = {this.toggleCollapse}
         lang = {this.state.lang}
       />
+
+      {/*Main content wrapper*/}
       <div id="page-wrap">
-      
+
+        {/*Main contet (static pages, charts etc.*/}
         <MainContent
           region = {this.state.region}  
           period = {this.state.period}
@@ -464,9 +551,7 @@ render(){
         />
         </div>
       </div>
-      
     </div>
-
     );
   }
 }

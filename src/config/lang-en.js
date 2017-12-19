@@ -1,7 +1,7 @@
 const ln =
 {
     header  :   {
-        "metsamittari"  :   "Forest Indicator Service",
+        "metsamittari"  :   "Forest Indicators",
         "valinnat"      :   "Options",
         "tietoja"       :   "About"
     },
